@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+
+  <title>Coding Games!</title>
+  <script src="./js/code.js"></script>
+  <script src="./js/lib/codemirror.js"></script>
+  <link rel="stylesheet" href="./js/lib/codemirror.css">
+  <link rel="stylesheet" href="./js/main.css">
+  <link rel="stylesheet" id="gameCSS">
+  <script src="./js/lib/mode/javascript.js"></script>
+  <script src="./js/games/thor/thor.js"></script>
+
+</head>
+
+<body>
+  <div class="menu">
+    <a class="btn" onclick="show('games')">Choose Game</a>
+    <a class="btn" onclick="show('help')">Help</a>
+  </div>
+  <div class="view" id="gameChoice" style="display:none"><button onclick="chooseGame(0)">Start</button></div>
+  <div class="view grid" id="gameDisplay" style="display: none;">
+    <h1 id="title" style="grid-area: header"></h1>
+
+
+    <div class="panel" style="grid-area: rules;">
+      <div class="panel-header">Anleitung</div>
+      <div class="panel-body" id="instructions"></div>
+    </div>
+
+    <div class="panel" style="grid-area: src">
+      <div class="panel-header">Sourcecode</div>
+      <div class="panel-body" id="code">
+        <div id="codearea"></div>
+        <div id="testcases"></div>
+        <div class="actions">
+          <div id="successNumber"></div>
+          <div id="successMessage" class="success"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel result" style="grid-area: result">
+      <div class="panel-header">Result</div>
+      <div class="panel-body resultbody">
+        <div id="game"></div>
+        <div id="result"></div>
+      </div>
+    </div>
+  </div>
+  <div class="view" id="help">
+    <h1>Coding Games</h1>
+    <p>Spielerisch Javascript programmieren lernen! (Idee von <a href="https://www.codingame.com">Codingame</a> geklaut, da die Seite in China nicht funktioniert)</p>
+    <h2>Genereller Ablauf</h2>
+    <p>Quellcode schreiben, der eine vorgegebene Aufgabe so gut wie möglich löst. </p>
+    <p>Der Quellcode muss alle Testcases bestehen. Wie im realen Programmierer-Leben auch können die Testcases als Anforderungen betrachtet werden, die der Sourcecode erfüllen muss. Sobald alle Testcases bestanden sind darf der Code als Release veröffentlicht werden und wird Blindtests unterzogen - in der Praxis: ob der Code den Test in der freien Wildbahn ebenfalls besteht, wo der Programmierer nicht weiß mit welchem Input andere Leute ihn füttern.</p>
+    <p>Wenn auch die Blindtests bestanden wurden, gilt die Aufgabe als gemeistert.</p>
+    <h2>Bedienung</h2>
+    <p>Spiel auswählen in <a href="javascript:void(0)" onclick="show('games')">Choose Games</a>, und los gehts.</p>
+    <p>Die <b>Anleitung</b> enthält alles was es über In- und Output zu wissen gibt. Was sind die Variablen die man einlesen muss, was sind die Ausgaben die erwartet werden.</p>
+    <p>Im Bereich <b>Sourcecode</b> wird programmiert und die Testcases gestartet. Es ist empfehlenswert die Testcases der Reihe nach durchzuführen, da sie der Schwierigkeit nach sortiert sind. Der eingegebene Sourcecode wird beim Starten eines Testcases gespeichert, sodass nach einem Seiten-Reload noch immer alles da ist (so lang im selben Browser weiter gearbeitet wird und kein Cache gelöscht wird).</p>
+    <p>Bei den <b>Results</b> wird das Ergebnis beim Ausführen eines Testcases dargestellt - sowohl graphisch als auch eine Konsole mit den entsprechenden Log- und Fehlermeldungen</p>
+
+    <p></p>
+  </div>
+
+  <script src="./js/main.js"></script>
+</body>

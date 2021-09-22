@@ -1,0 +1,66 @@
+.thor svg .background {
+  stroke: #aaa;
+  stroke-width: 2;
+  fill: rgba(200, 200, 200, 0.2)
+}
+
+.thor svg .line {
+  stroke: #ddd;
+  stroke-width: 1;
+}
+
+.thor svg text {
+  fill: black;
+  font-size: 10px
+}
+
+.thor svg .fiveLine {
+  stroke: #aaa;
+  stroke-width: 1
+}
+
+.thor svg .tenLine {
+  stroke: #aaa;
+  stroke-width: 2
+}
+
+.thor svg .compassNeedle {
+  stroke: black;
+  stroke-width: 1;
+  fill: black;
+  stroke-linejoin:round;
+}
+
+.thor svg .mixedDir {
+  font-size: 7px;
+}
+
+.thor {
+  position: relative;
+}
+
+#thor,
+#light {
+  position: absolute;
+  width: calc(100% / 20);
+  height: calc(100% / 10);
+  display: none;
+  transition: top 0.5s, left 0.5s;
+  
+}
+
+#thor span,
+#light span {
+  display: none;
+}
+
+#thor {
+  background: url(./thor.png);
+  background-size: cover;
+}
+
+#light {
+  background: url(./light.png);
+  background-size: cover;
+}
+
