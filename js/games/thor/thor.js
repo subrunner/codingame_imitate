@@ -1,7 +1,6 @@
-class Thor {
+class Thor extends Game {
 
 
-  id = "thor";
   title = "Thor - Find the Light!";
   description = 'Help Thor <img src="./js/games/thor/thor.png" style="width:40px;height:40px"> to reach the light <img src="./js/games/thor/light.png" style="width:40px;height:40px"> of power.';
   successMessage = "Thor is now immune against Loki's light-stealing powers. At the very least, he knows how to get it back no matter where Loki hides it. <p>Good job!"
@@ -9,18 +8,11 @@ class Thor {
 <p>The final battle of Ragnarök, the twilight of the gods is approaching. You incarnate Thor who is participating in this final battle against all the forces of evil, led by Loki, Thor's wizard brother.
 <p>Thor was wounded during a previous battle against Fenrir, the wolf-god. During the battle, Loki took advantage of the general confusion and used his magic to annihilate the magical powers of Thor’s hammer, Mjöllnir, by separating it from his soul: the light of power.
 <p>Thor, who now feels very weak, must find and reach the light of power, as fast as possible, since it is the only thing which can restore his and Mjollnir's powers.</p>`
-  hasStarted = false;
-  chosenTestcase = -1;
-  currentTurn = -1;
+
   currentThor = [];
   light = [];
   dim = [30, 15];
   cssFile = "./js/games/thor/thor.css";
-
-  /**
-   * Keeps track of which testcases were successfully completed
-   */
-  successfulTestcases = [];
 
   /**
    * The configured testcases
@@ -43,7 +35,7 @@ class Thor {
       thor: [18, 10],
       light: [3, 5],
       numberTurns: 22
-    },{
+    }, {
       name: "Diagonal - Quick",
       thor: [8, 10],
       light: [13, 5],
@@ -51,15 +43,40 @@ class Thor {
     }
   ];
 
+  releasetests = [
+    {
+      name: "Straight Line I",
+      thor: [10, 8],
+      light: [10, 5],
+      numberTurns: 3
+    },
+    {
+      name: "Straight Line II",
+      thor: [10, 8],
+      light: [17, 8],
+      numberTurns: 7
+    },
+    {
+      name: "Diagonal I",
+      thor: [3, 5],
+      light: [29, 12],
+      numberTurns: 26
+    }, {
+      name: "Diagonal II",
+      thor: [8, 5],
+      light: [13, 10],
+      numberTurns: 5
+    }
+  ]
+
   svgHtml;
 
   constructor() {
-    this.testcases.forEach(t => this.successfulTestcases.push(false));
-
+    super("thor");
 
   }
 
-  displayGame = (elPlayingfield) => {
+  initGameArea = (elPlayingfield) => {
     if (!this.svgHtml) {
       /**
      * render the SVG
@@ -73,7 +90,7 @@ class Thor {
 
       // lines. Assume: width > height!
       for (let i = 10; i < width; i += 10) {
-        
+
         // vertical
         svg.push('<line x1="' + i + '" x2="' + i + '" y1="0" y2="' + height + '" class="line"></line>')
 
@@ -83,8 +100,8 @@ class Thor {
         }
       }
       for (let i = 0; i <= width; i += 50) {
-        let isTenline = i%100===0,
-          clazz = isTenline ?"tenLine": "fiveLine" ; 
+        let isTenline = i % 100 === 0,
+          clazz = isTenline ? "tenLine" : "fiveLine";
 
         // vertical
         svg.push('<line x1="' + i + '" x2="' + i + '" y1="0" y2="' + height + '" class="line ' + clazz + '"></line>')
@@ -95,7 +112,7 @@ class Thor {
         }
       }
 
-      
+
       // text
       svg.push('<text x="0" y="10">(0,0)</text>');
       svg.push('<text x="' + (width - 35) + '" y="' + (height - 2) + '">(' + this.dim[0] + "," + this.dim[1] + ')</text>')
@@ -116,87 +133,19 @@ class Thor {
     // show the SVG
     elPlayingfield.innerHTML = this.svgHtml;
 
-    // if we have a testcase, show the light and Thor
-    if (this.chosenTestcase > -1) {
-      let elLight = document.getElementById("light"),
-        elThor = document.getElementById("thor"),
-        testcase = this.testcases[this.chosenTestcase];
-      this.setGamePosition(elThor, testcase.thor);
-      this.setGamePosition(elLight, testcase.light);
-    }
+
   } // END displayGame
 
-  /**
-   * Creates SVG compass
-   * @param {array} svg array to fill with the individual svg lines
-   * @param {number} centerX center x-coordinate
-   * @param {number} centerY compass center y-coordinate
-   * @param {number} radius compass circle radius
-   * @returns {array} the svg array
-   */
-  getCompass(svg, centerX, centerY, radius) {
-    let center = [centerX, centerY],
-      sqrtRadius = radius / Math.sqrt(2),
-      transform,
-      x, y;
-    svg.push('<circle cx="' + center[0] + '" cy="' + center[1] + '" r="' + radius + '" stroke="black" stroke-width="2" fill="none"/>');
+  updateGameArea = (isNewTestcase) => {
+    //  show the light and Thor
+    let elLight = document.getElementById("light"),
+      elThor = document.getElementById("thor");
+    this.setGamePosition(elThor, this.currentThor);
+    if (isNewTestcase)
+      this.setGamePosition(elLight, this.light);
 
-    // south needle
-    x = center[0];
-    y = center[1] + radius;
-    transform = 'translate(' + x + ' ' + y + ')';
-    svg.push('<polygon points="-5,0 0,10 5,0 0,0 0,10" transform="' + transform + '" class="compassNeedle"/>');
-    svg.push('<text x="' + x + '" y="' + y + '" dx="-3" dy="20">S</text>');
-
-    // north needle
-    y = center[1] - radius;
-    transform = 'translate(' + x + ' ' + y + ') rotate(180)';
-    svg.push('<polygon points="-5,0 0,10 5,0 0,0 0,10" transform="' + transform + '" class="compassNeedle"/>');
-    svg.push('<text x="' + x + '" y="' + y + '" dx="-3" dy="-12">N</text>');
-
-    // west needle
-    x = center[0] - radius;
-    y = center[1];
-    transform = 'translate(' + x + ' ' + y + ') rotate(90)';
-    svg.push('<polygon points="-5,0 0,10 5,0 0,0 0,10" transform="' + transform + '" class="compassNeedle"/>');
-    svg.push('<text x="' + x + '" y="' + y + '" dx="-22" dy="5">W</text>');
-
-    // east needle
-    x = center[0] + radius;
-    transform = 'translate(' + x + ' ' + y + ') rotate(270)';
-    svg.push('<polygon points="-5,0 0,10 5,0 0,0 0,10" transform="' + transform + '" class="compassNeedle"/>');
-    svg.push('<text x="' + x + '" y="' + y + '" dx="12" dy="5">E</text>');
-
-    // SW needle
-    x = center[0] - sqrtRadius;
-    y = center[1] + sqrtRadius;
-    transform = 'translate(' + x + ' ' + y + ') rotate(45)';
-    svg.push('<polygon points="-3,0 0,5 3,0" transform="' + transform + '" class="compassNeedle"/>');
-    svg.push('<text x="' + x + '" y="' + y + '" dx="-15" dy="10" class="mixedDir">SW</text>');
-
-    // NW needle
-    x = center[0] - sqrtRadius;
-    y = center[1] - sqrtRadius;
-    transform = 'translate(' + x + ' ' + y + ') rotate(135)';
-    svg.push('<polygon points="-3,0 0,5 3,0" transform="' + transform + '" class="compassNeedle"/>');
-    svg.push('<text x="' + x + '" y="' + y + '" dx="-15" dy="-5" class="mixedDir">NW</text>');
-
-    // NE needle
-    x = center[0] + sqrtRadius;
-    y = center[1] - sqrtRadius;
-    transform = 'translate(' + x + ' ' + y + ') rotate(215)';
-    svg.push('<polygon points="-3,0 0,5 3,0" transform="' + transform + '" class="compassNeedle"/>');
-    svg.push('<text x="' + x + '" y="' + y + '" dx="4" dy="-5" class="mixedDir">NE</text>');
-
-    // SW needle
-    x = center[0] + sqrtRadius;
-    y = center[1] + sqrtRadius;
-    transform = 'translate(' + x + ' ' + y + ') rotate(305)';
-    svg.push('<polygon points="-3,0 0,5 3,0" transform="' + transform + '" class="compassNeedle"/>');
-    svg.push('<text x="' + x + '" y="' + y + '" dx="4" dy="10" class="mixedDir">SE</text>');
-
-    return svg;
   }
+
 
   /**
    * 
@@ -230,17 +179,12 @@ class Thor {
    * initializes everything for running a testcase
    * @param {number} id id of the testcase
    */
-  prepareTestcase = function (id, elPlayingfield) {
-    this.chosenTestcase = id;
-    this.successfulTestcases[id] = false; // reset so that we can test again!
-    let testcase = this.testcases[id];
+  prepareTestcase = function () {
+    let testcase = CODE.C.testcase;
     this.currentTurn = testcase.numberTurns;
     this.hasStarted = false;
     this.currentThor = testcase.thor.map(a => a);// copy the array...
     this.light = testcase.light; // no copying necessary - we don't modify it!
-
-    // prepare the playing field
-    this.displayGame(elPlayingfield);
   };
 
   /**
@@ -248,10 +192,6 @@ class Thor {
    * @param {array} args 
    */
   consolelog = function (args) {
-    // don't do anything if we have a success!
-    if (this.successfulTestcases[this.chosenTestcase]) {
-      return;
-    }
 
     // log the number turns here!
     this.currentTurn--;
@@ -272,9 +212,6 @@ class Thor {
     if (userInput.indexOf("E") > -1)
       this.currentThor[0]++;
 
-    // display thor!
-    this.setGamePosition(document.getElementById("thor"), this.currentThor);
-
 
     // check if thor is out of bounds!
     let isLight = true;
@@ -286,9 +223,7 @@ class Thor {
 
     // not out of bounds. Check: have we found the light?
     if (isLight) {
-      this.successfulTestcases[this.chosenTestcase] = true;
-      console.log("Thor found the light!");
-      throw new Error("SUCCESS");
+      CODE.success("Thor found the light!");
     }
   };
   codeTemplate = `
@@ -345,12 +280,12 @@ while (true) {
   <p>Each movement makes Thor move by 1 cell in the chosen direction.
   `;
 
-  input=`1 line with the coordinates of first the light, then Thor separated by a space character:
+  input = `1 line with the coordinates of first the light, then Thor separated by a space character:
   <p><span class="var">lightX</span> <span class="var">lightY</span> <span class="var">initialTX</span> <span class="var">initialTY</span></p>
   <p><b>Example:</b> Light at (10,3), Thor at (15,5): <span class="console">10 3 15 5</span>
   <p>For every game turn, 1 line with the number of turns remaining <span class="var">remainingTurns</span>. This number can be ignored, but it MUST be read every turn.`;
-  
-  output=`The direction Thor should move - one direction per turn:
+
+  output = `The direction Thor should move - one direction per turn:
   <span class="out">N</span> 
     <span class="out">NE</span> 
     <span class="out">E</span> 
@@ -358,7 +293,8 @@ while (true) {
     <span class="out">S</span>
     <span class="out">SW</span>
     <span class="out">W</span>
-    <span class="out">NW</span>`;
+    <span class="out">NW</span>
+    <p>Don't worry about stopping once you reach the light - the program does that automatically!`;
 }
 
-CODE.GAMES.push(new Thor());
+CODE.GAMES.add(new Thor());

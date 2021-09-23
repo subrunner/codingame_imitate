@@ -63,6 +63,11 @@ h1 {
   overflow: auto;
 }
 
+.playall,
+.release {
+  display: inline-block;
+}
+
 #testcases {
   margin-top: 10px;
   height: 100px;
@@ -194,12 +199,25 @@ h1 {
   padding: 20px;
   /* height of view - height of menu - padding */
   min-height: calc(100vh - 42px - 40px);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .game {
   padding: 20px;
   background: white;
   box-shadow: 1px 1px 5px black;
+  margin: 10px;
+  position: relative;
+}
+
+.game .solved {
+  font-size: 2em;
+  position: absolute;
+  font-weight: bold;
+  right: 0;
+  transform: rotate(45deg);
+  color: green;
 }
 
 .game .title {
@@ -224,4 +242,37 @@ h1 {
 
 img {
   vertical-align: middle;
+}
+
+/*
+* Popup
+*/
+
+.popup {
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* must be above menu */
+  z-index: 20;
+}
+
+.popup .panel {
+  min-width: 300px;
+  max-width: 800px;
+  width: 30%;
+  margin: 100px auto auto auto;
+  background: white;
+}
+
+.popup .title {
+  display: inline-block;
+  padding: 10px 0 10px 0;
+}
+
+.popup .close {
+  float: right;
+  margin: 0;
 }

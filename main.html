@@ -7,11 +7,14 @@
   <title>Coding Games!</title>
   <script src="./js/code.js"></script>
   <script src="./js/lib/codemirror.js"></script>
+  <script src="./js/lib/mode/javascript.js"></script>
   <link rel="stylesheet" href="./js/lib/codemirror.css">
   <link rel="stylesheet" href="./js/main.css">
   <link rel="stylesheet" id="gameCSS">
-  <script src="./js/lib/mode/javascript.js"></script>
+  <!-- Games - we cannot use import because that causes CORS problems when main.html is in file:/// path-->
+  <script src="./js/classes/game.js"></script>
   <script src="./js/games/thor/thor.js"></script>
+  <script src="./js/games/thorII/thorII.js"></script>
 
 </head>
 
@@ -37,7 +40,8 @@
         <div id="testcases"></div>
         <div class="actions">
           <div id="successNumber"></div>
-          <div id="successMessage" class="success"></div>
+          <div class="btn playall" onclick="CODE.allTestcases()">Play all testcases</div>
+          <div id="releaseBtn" class="btn release" style="display:none" onclick="CODE.releaseTests()">Release</div>
         </div>
       </div>
     </div>
@@ -52,18 +56,35 @@
   </div>
   <div class="view" id="help">
     <h1>Coding Games</h1>
-    <p>Spielerisch Javascript programmieren lernen! (Idee von <a href="https://www.codingame.com">Codingame</a> geklaut, da die Seite in China nicht funktioniert)</p>
+    <p>Spielerisch Javascript programmieren lernen! (Idee von <a href="https://www.codingame.com">Codingame</a> geklaut,
+      da die Seite in China nicht funktioniert)</p>
     <h2>Genereller Ablauf</h2>
     <p>Quellcode schreiben, der eine vorgegebene Aufgabe so gut wie möglich löst. </p>
-    <p>Der Quellcode muss alle Testcases bestehen. Wie im realen Programmierer-Leben auch können die Testcases als Anforderungen betrachtet werden, die der Sourcecode erfüllen muss. Sobald alle Testcases bestanden sind darf der Code als Release veröffentlicht werden und wird Blindtests unterzogen - in der Praxis: ob der Code den Test in der freien Wildbahn ebenfalls besteht, wo der Programmierer nicht weiß mit welchem Input andere Leute ihn füttern.</p>
+    <p>Der Quellcode muss alle Testcases bestehen. Wie im realen Programmierer-Leben auch können die Testcases als
+      Anforderungen betrachtet werden, die der Sourcecode erfüllen muss. Sobald alle Testcases bestanden sind darf der
+      Code als Release veröffentlicht werden und wird Blindtests unterzogen - in der Praxis: ob der Code den Test in der
+      freien Wildbahn ebenfalls besteht, wo der Programmierer nicht weiß mit welchem Input andere Leute ihn füttern.</p>
     <p>Wenn auch die Blindtests bestanden wurden, gilt die Aufgabe als gemeistert.</p>
     <h2>Bedienung</h2>
     <p>Spiel auswählen in <a href="javascript:void(0)" onclick="show('games')">Choose Games</a>, und los gehts.</p>
-    <p>Die <b>Anleitung</b> enthält alles was es über In- und Output zu wissen gibt. Was sind die Variablen die man einlesen muss, was sind die Ausgaben die erwartet werden.</p>
-    <p>Im Bereich <b>Sourcecode</b> wird programmiert und die Testcases gestartet. Es ist empfehlenswert die Testcases der Reihe nach durchzuführen, da sie der Schwierigkeit nach sortiert sind. Der eingegebene Sourcecode wird beim Starten eines Testcases gespeichert, sodass nach einem Seiten-Reload noch immer alles da ist (so lang im selben Browser weiter gearbeitet wird und kein Cache gelöscht wird).</p>
-    <p>Bei den <b>Results</b> wird das Ergebnis beim Ausführen eines Testcases dargestellt - sowohl graphisch als auch eine Konsole mit den entsprechenden Log- und Fehlermeldungen</p>
+    <p>Die <b>Anleitung</b> enthält alles was es über In- und Output zu wissen gibt. Was sind die Variablen die man
+      einlesen muss, was sind die Ausgaben die erwartet werden.</p>
+    <p>Im Bereich <b>Sourcecode</b> wird programmiert und die Testcases gestartet. Es ist empfehlenswert die Testcases
+      der Reihe nach durchzuführen, da sie der Schwierigkeit nach sortiert sind. Der eingegebene Sourcecode wird beim
+      Starten eines Testcases gespeichert, sodass nach einem Seiten-Reload noch immer alles da ist (so lang im selben
+      Browser weiter gearbeitet wird und kein Cache gelöscht wird).</p>
+    <p>Bei den <b>Results</b> wird das Ergebnis beim Ausführen eines Testcases dargestellt - sowohl graphisch als auch
+      eine Konsole mit den entsprechenden Log- und Fehlermeldungen</p>
 
     <p></p>
+  </div>
+
+  <div class="popup" id="popup" style="display:none">
+    <div class="panel">
+      <div class="panel-header"><div class="title"></div><div class="close btn">X</div></div>
+      <div class="panel-body">
+      </div>
+    </div>
   </div>
 
   <script src="./js/main.js"></script>

@@ -14,7 +14,52 @@
   const SEPARATOR = "> eval:";
 
   // Games - contains config and initializes them
-  CODE.GAMES = CODE.GAMES || [];
+  CODE.GAMES = CODE.GAMES || {
+    add: game => {
+      CODE.GAMES[game.id] = game;
+    }
+  };
+
+  // configuration - chosen game, current testcase, etc.
+  CODE.CONFIG = CODE.CONFIG || {
+    chosenTestcase: -1,
+    testcase: {},
+    isBlindTests: false,
+    successfulTestcases: [],
+    successfulReleasetests: []
+  }
+  CODE.C = CODE.CONFIG;
+
+  // success: disrupts the eval execution and tells the user of the success
+  function success (message)  {
+    // remember our success
+    if (CODE.C.isBlindTests) {
+      CODE.C.successfulReleasetests[CODE.C.chosenTestcase] = true;
+    } else
+      CODE.C.successfulTestcases[CODE.C.chosenTestcase] = true;
+
+    // for non-blind-tests: display!
+    if (!CODE.C.isBlindTests) {
+      // display the game a last time
+      CODE.G.updateGameArea();
+
+      // display the message in our 'console'
+      writeToResult("<div class='success'>" + message + "</div>");
+
+      // in output
+      writeToResult("<div class='success'>SUCCESS</div>");
+      // in testcase
+      document.getElementById("testcase_" + CODE.C.chosenTestcase).className = "btn testcase success";
+
+
+
+    }
+
+    showSuccessfulTestcases();
+
+    // interrupt the execution
+    throw new Error("SUCCESS");
+  };
 
 
   /**
@@ -25,17 +70,29 @@
   //console._debug = console.debug;
 
   console.log = function (...args) {
-    // traditional logging
-    console._log(...args);
+    // in case of blind tests, just give it directly to the game
+    if (!CODE.C.isBlindTests) {
+      // traditional logging
+      console._log(...args);
 
-    // write to our output div
-    writeToResult("<div class='log'>" + args.join(" ") + "</div>");
+      // write to our output div
+      writeToResult("<div class='log'>" + args.join(" ") + "</div>");
+    }
 
     // give it to our game logic
     CODE.GAME.consolelog(args);
+
+    // display
+    if (!CODE.C.isBlindTests)
+      CODE.G.updateGameArea();
   }
 
   console.error = function (...args) {
+    // in case of blind tests, do nothing
+    if (CODE.C.isBlindTests) {
+      return;
+    }
+
     // traditional logging
     console._error(...args);
 
@@ -44,50 +101,87 @@
   }
 
 
-  function executeCode(testcaseId) {
+  /**
+   * Executes a single testcase. non-blind!
+   * @param {number} testcaseId 
+   */
+  async function executeTestcase(testcaseId) {
     try {
-      let code = myCodeMirror.getValue(),
-        stored = localStorage.getItem("codearea_" + CODE.G.id);
-      /**
-       * check: has the sourcecode changed?
-       */
-      if (code !== stored) {
-        // changed: warn all testcases!
-        let nodes = document.getElementsByClassName("testcase");
-        for (let i = 0; i < nodes.length; i++) {
-          let classlist = nodes[i].classList;
-          if (classlist.contains("success") || classlist.contains("error"))
-            classlist.add("warn");
+      // make sure we don't do release tests!
+      CODE.C.isBlindTests = false;
 
-          // warn game, too!
-          CODE.G.successfulTestcases[i] = false;
-        }
-      }
+      let code = myCodeMirror.getValue();
+      console._log("execute testcase ", testcaseId);
+      CODE.C.chosenTestcase = testcaseId;
+      CODE.C.testcase = CODE.G.testcases[testcaseId];
 
-      // now prepare our game!
-      let elGame = document.getElementById("game");
-      elGame.innerHTML = "";
-      CODE.GAME.prepareTestcase(testcaseId, elGame);
-      localStorage.setItem("codearea_" + CODE.GAME.id, code);
-      document.getElementById("result").innerHTML = "";
-      eval("(async () => { try{" + code + "\n} catch(e){showError(e)}})()");
+      // actually execute the code
+      await executeCode(code);
     } catch (e) {
       showError(e);
     }
   }
 
   /**
- * Successfully absolved a single testcase
- */
-  function showSuccess() {
-    // in output
-    writeToResult("<div class='success'>SUCCESS</div>");
-    // in testcase
-    document.getElementById("testcase_" + CODE.G.chosenTestcase).className = "btn testcase success";
+   * Executes the code. May throw errors!
+   * @param {string} code code that the user entered
+   */
+  async function executeCode(code) {
+    //console._log("executeCode " + code);
 
-    showSuccessfulTestcases();
+    // now prepare our game!
+    CODE.GAME.prepareTestcase();
+
+    if (!CODE.C.isBlindTests) {
+      CODE.GAME.updateGameArea(true);
+      // reset the code output
+      document.getElementById("result").innerHTML = "";
+    }
+
+    //console._log("eval");
+
+    // do our evaluation!
+    await eval("(async () => { " + code + "\nCODE.G.end()})()");
+    console._log("after eval");
+  }
+
+  /**
+   * executes all testcases in CODE.C.testcases. Make sure that the proper successfulTestcases
+   * and successfulReleasetests have been prepared!
+   */
+  async function playAllTestcases() {
+    let code = myCodeMirror.getValue(),
+      testcases = CODE.C.testcases;
+
+    // execute all testcases
+    for (let i = 0; i < testcases.length; i++) {
+      CODE.C.chosenTestcase = i;
+      CODE.C.testcase = testcases[i];
+
+      if (!CODE.C.isBlindTests) {
+        // scroll testcase into view
+        document.getElementById("testcase_" + i).scrollIntoView();
+      }
+
+      // execute code
+      try {
+        await executeCode(code);
+      } catch (e) {
+        // in non-blind tests: stop the procession if we have an error case!
+        if (!CODE.C.isBlindTests && e.message !== "SUCCESS") {
+          showError(e);
+          // actually stop...
+          break;
+        }
+      }
+    }
+
+    // show stuff for release tests in case of errors
+    showSuccessfulTestcases(true);
 
   }
+
+
 
   function writeToResult(html) {
     let elResult = document.getElementById("result");
@@ -102,7 +196,23 @@
 
     // special case: SUCCESS marks that user succeeded and code execution is aborted
     if (e.message.indexOf("SUCCESS") > -1) {
-      showSuccess();
+      return;
+    }
+
+    // if there is an error, we have not solved this thing!
+    if (CODE.C.isBlindTests) {
+      CODE.C.successfulReleasetests[CODE.C.chosenTestcase] = false;
+    } else
+      CODE.C.successfulTestcases[CODE.C.chosenTestcase] = false;
+
+    // remember that we failed the test: game is not solved,
+    // no release tests possible
+    localStorage.setItem("solved_" + CODE.G.id, '');
+    document.getElementById('releaseBtn').style.display = "none";
+
+    // in case of blind tests, do nothing more
+    if (CODE.C.isBlindTests) {
+      console._error("Doing blind tests. Not logging anything.");
       return;
     }
 
@@ -110,7 +220,7 @@
     console._error(e);
 
     // show in testcase
-    document.getElementById("testcase_" + CODE.G.chosenTestcase).className = "btn testcase error";
+    document.getElementById("testcase_" + CODE.C.chosenTestcase).className = "btn testcase error";
 
     showSuccessfulTestcases();
 
@@ -147,37 +257,76 @@
   }
 
   /**
- * updates the number of total successful testcases
+ * updates the number of total successful testcases, and if we are in a release-test and have passed all release
+ * tests, then shows the overall success
  */
-  function showSuccessfulTestcases() {
+  function showSuccessfulTestcases(showBlindtestResult = false) {
     let successes = 0,
-      numberCases = CODE.G.testcases.length;
+      numberCases = CODE.G.testcases.length,
+      totalCases = numberCases + CODE.G.releasetests.length;
 
-    CODE.G.successfulTestcases.forEach(s => s ? successes++ : "");
+    CODE.C.successfulTestcases.forEach(s => s ? successes++ : "");
 
-    // successful testcases
-    document.getElementById('successNumber').innerHTML = "Passed <span>" + successes + " / " + numberCases + "</span> test cases.";
+    // non-blind tests: display result
+    if (!CODE.C.isBlindTests) {
 
-    // overall success
-    document.getElementById('successMessage').innerHTML = numberCases === successes ? CODE.G.successMessage : "";
+      // successful testcases
+      document.getElementById('successNumber').innerHTML = "Passed <span>" + successes + " / " + numberCases + "</span> test cases.";
+
+      // in case we have solved all ui cases, tell the user
+      if (successes === numberCases){
+        showPopup("Test Success","You have solved all testcases. Now it is time to test your code by releasing it.<p>Press the 'Release' button to see how it fares in the wild!");
+      }
+      // in case we have solved all ui cases, display the release tests option. Otherwise, hide it.
+      document.getElementById('releaseBtn').style.display = (successes === numberCases) ? null : "none";
+
+    } else if (showBlindtestResult) {
+
+      // overall success: add the releasetest successes
+      CODE.C.successfulReleasetests.forEach((s, id) => s ? successes++ : "");
+
+      // SUCCESS!
+      if (totalCases === successes) {
+        showPopup("SUCCESS", '<p>Alle ' + CODE.C.testcases.length + ' Releasetests wurden erfolgreich durchgeführt.<div class="success">' + CODE.G.successMessage + "</div>");
+        // save the overall success!
+        localStorage.setItem("solved_" + CODE.G.id, true);
+      } else {
+
+        // FAILED at least 1 case
+        let successPercentage = (successes - numberCases) * 100 / CODE.C.testcases.length,
+          cases = CODE.C.testcases.map((c, i) => "<div class='" + (CODE.C.successfulReleasetests[i] ? "success" : "error") + "'>" + c.name + "</div>");
+        successPercentage = Math.round(successPercentage);
+        showPopup(successPercentage + "% Success-rate", "Only " + successPercentage + "% of the cases were solved:" + cases.join(""));
+
+      }
+    }
 
   }
 
   function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-  
+
   async function readline() {
-  
-    // wait a bit before actually performing the reading!
-    await sleep(200);
+
+    if (!CODE.C.isBlindTests)
+      // wait a bit before actually performing the reading during UI tests!
+      await sleep(200);
     return CODE.GAME.readline();
   }
-  
+
 
   function startGame(id) {
     CODE.GAME = CODE.GAMES[id];
     CODE.G = CODE.GAME;
+
+    /**
+     * Config
+     */
+    CODE.C.isBlindTests = false;
+    CODE.C.currentGame = id;
+    CODE.C.chosenTestcase = -1;
+    CODE.C.successfulTestcases = CODE.G.testcases.map(tc => false);
 
     /**
      * CSS
@@ -201,7 +350,7 @@
      */
     let cases = [];
     CODE.G.testcases.forEach((tc, i) => {
-      cases.push('<div class="btn testcase" id="testcase_' + i + '" onclick="executeCode(' + i + ')">');
+      cases.push('<div class="btn testcase" id="testcase_' + i + '" onclick="CODE.executeTestcase(' + i + ')">');
       cases.push('Testcase ' + i + ': ' + tc.name + '</div>');
     })
     document.getElementById("testcases").innerHTML = cases.join('');
@@ -221,29 +370,91 @@
       codeTemplate = CODE.GAME.codeTemplate;
     }
 
-    if (!myCodeMirror){
-      myCodeMirror = CodeMirror(document.getElementById("codearea"), {
+    if (!myCodeMirror) {
+      let elCodearea = document.getElementById("codearea");
+
+      // add a focus-lost handler so that the code gets saved and the testcases are warned
+      elCodearea.onblur = saveCode;
+
+      // create the editor
+      myCodeMirror = CodeMirror(elCodearea, {
         value: codeTemplate,
         mode: "javascript",
         lineNumbers: true
       });
+      myCodeMirror.on('blur', saveCode);
     }
     myCodeMirror.setValue(codeTemplate);
+
+    // 'console'
+    document.getElementById("result").innerHTML = "";
 
     // show playing field
     let elGame = document.getElementById("game");
     elGame.innerHTML = "";
     elGame.className = CODE.G.id;
-    if (CODE.G.displayGame)
-      CODE.G.displayGame(elGame);
+    CODE.G.initGameArea(elGame);
+  } // END startGame
+
+  /**
+   * saves the code in the sourcecode area, warns testcases if necessary
+   */
+  function saveCode() {
+    console._log("Save code!");
+
+    let code = myCodeMirror.getValue(),
+      stored = localStorage.getItem("codearea_" + CODE.G.id);
+
+    /**
+     * check: has the sourcecode changed? 
+     */
+    if (code !== stored) {
+      // changed: warn all testcases!
+      let nodes = document.getElementsByClassName("testcase");
+      for (let i = 0; i < nodes.length; i++) {
+        let classlist = nodes[i].classList;
+        if (classlist.contains("success") || classlist.contains("error"))
+          classlist.add("warn");
+
+        // warn game, too!
+        CODE.C.successfulTestcases[i] = false;
+      }
+      localStorage.setItem("codearea_" + CODE.G.id, code);
+
+      // remove any success messages...
+      localStorage.setItem("solved_" + CODE.G.id, '');
+
+      // hide releasebutton
+      document.getElementById("releaseBtn").style.display = "none";
+    }
+  } // END saveCode
+
+  function releaseTests() {
+    // prepare everything for the release tests
+    CODE.C.isBlindTests = true;
+    CODE.C.testcases = CODE.G.releasetests;
+    CODE.C.successfulReleasetests = CODE.C.testcases.map(() => false);
+
+    playAllTestcases();
   }
 
+  function allTestcases() {
+    // prepare everything for the ui tests
+    CODE.C.isBlindTests = false;
+    CODE.C.testcases = CODE.G.testcases;
+    CODE.C.successfulTestcases = CODE.C.testcases.map(() => false);
+
+    playAllTestcases();
+  }
 
 
   /**
    * exports
    */
   window.readline = readline;
-  window.startGame = startGame;
-  window.executeCode = executeCode;
+  CODE.startGame = startGame;
+  CODE.executeTestcase = executeTestcase;
+  CODE.allTestcases = allTestcases;
+  CODE.releaseTests = releaseTests;
+  CODE.success = success;
 })();
