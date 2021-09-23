@@ -4,11 +4,19 @@ class Game {
   description = "Kurze Beschreibung";
   synopsis = "Spielewelt";
   successMessage = "Spielewelts-Erfolgsmeldung";
-  codeTemplate = "// JS starting code here...\n// output via console.log\nconsole.log(await readline());\nconsole.log('help')";
+  codeTemplate = `// JS starting code here...
+// output via console.log
+let input = await readline();
+console.log('second');
+console.log('first');`;
   rules = "Anweisungen, wie das Spiel funktioniert<p>den Input 1:1 in den Output übergeben";
   input = "Was der Programmierer als Input erwarten kann<p>Ein String. Mit <span class='console'>await readline()</span> einlesen.";
   output = "Was der Programierer als Output produzieren soll<p>Der String, der als Input geliefert wurde - <span class='console'>console.log(input)</span>";
-
+  skills = ["Read Input","Write Output"];
+  /**
+   * the CODE.SKILLLEVEL level
+   */
+  skillLevel = 0;
 
   testcases = [{
     name: "first testcase",
@@ -32,8 +40,6 @@ class Game {
   // CSS file to load
   cssFile = "";
 
-
-  currentTurn = -1;
 
   constructor(id) {
     this.id = id;
@@ -82,7 +88,7 @@ class Game {
   consolelog = function (args) {
     this.outputs.push(args[0]);
     if (args[0] === CODE.C.testcase.output)
-      CODE.success("Ihr Auftrag war erfolgreich!");
+      CODE.success("Erfolgreich den Input '" + args[0] + "' an den Output weitergegeben!");
   }
 
   /**

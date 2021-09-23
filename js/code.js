@@ -20,6 +20,8 @@
     }
   };
 
+  CODE.SKILLLEVELS = ["Starting","Easy","Medium","Hard"];
+
   // configuration - chosen game, current testcase, etc.
   CODE.CONFIG = CODE.CONFIG || {
     chosenTestcase: -1,

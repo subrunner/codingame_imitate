@@ -2,29 +2,29 @@
  * Everything with the general layout
  */
 (function () {
-  
+
   /**
    * Popup function
    */
-   let elPopup = document.getElementById("popup"),
+  let elPopup = document.getElementById("popup"),
     elClose = elPopup.getElementsByClassName("close")[0];
-  function closePopup (e)  {
+  function closePopup(e) {
     // hide popup when clicked outside, or when close button pressed!
     if (e.target === elPopup || e.target === elClose)
-      elPopup.style.display="none";
+      elPopup.style.display = "none";
   }
   elPopup.onclick = closePopup;
   elClose.onclick = closePopup;
 
-  function showPopup(title, message){
+  function showPopup(title, message) {
     let elPopup = document.getElementById("popup"),
-      elTitle=elPopup.getElementsByClassName("title")[0],
+      elTitle = elPopup.getElementsByClassName("title")[0],
       elText = elPopup.getElementsByClassName("panel-body")[0];
     elTitle.innerHTML = title;
     elText.innerHTML = message;
 
     // show
-    elPopup.style.display="block";
+    elPopup.style.display = "block";
   }
 
   /**
@@ -35,21 +35,40 @@
     chooseMenuitem("gameChoice");
     let elRoot = document.getElementById("gameChoice"),
       html = [],
-      games = Object.keys(CODE.GAMES).filter(key => key!=="add");
-    
-    // order the games
-    games = games.map(id => CODE.GAMES[id]);
-    games = games.sort((a,b)=> a.title.localeCompare(b.title));
+      games = CODE.SKILLLEVELS.map(() => []);
 
-    // display them
-    games.forEach((game) => {
-      html.push(`<div class="game">
+    // order the games - first by category, then alphabetically
+    Object.keys(CODE.GAMES).forEach(key => {
+      // skip: the add function...
+      if (key === "add") {
+        return;
+      }
+      let g = CODE.GAMES[key];
+      games[g.skillLevel].push(g);
+    })
+
+    // go through the levels and display the games
+    games.forEach((level, i) => {
+      level.sort((a, b) => a.title.localeCompare(b.title));
+      html.push('<div class="category"><div class="panel-header">' + CODE.SKILLLEVELS[i] + '</div>');
+      html.push('<div class="panel-body"><div class="games">');
+      // display them
+      level.forEach((game) => {
+        html.push(`<div class="game">
       <div class="title" onclick="show('game','${game.id}')">${game.title}</div>
-      <div class="solved">${localStorage.getItem("solved_" + game.id)?"Solved":""}</div>
+      <div class="solved">${localStorage.getItem("solved_" + game.id) ? "Solved" : ""}</div>
       <div class="description">${game.description}</div>
       <div class="synopsis">${game.synopsis}</div>
-      </div>` );
+      <div class="skills">` );
+        // skills
+        game.skills.forEach(skill => html.push('<span class="var">' + skill + '</span> '));
+        html.push('</div></div>');
+      });
+      html.push('</div></div></div>');
     });
+
+
+
     elRoot.innerHTML = html.join("");
   }
 
