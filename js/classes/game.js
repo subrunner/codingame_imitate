@@ -12,7 +12,7 @@ console.log('first');`;
   rules = "Anweisungen, wie das Spiel funktioniert<p>den Input 1:1 in den Output übergeben";
   input = "Was der Programmierer als Input erwarten kann<p>Ein String. Mit <span class='console'>await readline()</span> einlesen.";
   output = "Was der Programierer als Output produzieren soll<p>Der String, der als Input geliefert wurde - <span class='console'>console.log(input)</span>";
-  skills = ["Read Input","Write Output"];
+  skills = ["Read Input", "Write Output"];
 
   readlineSleep = 200;
 
@@ -180,7 +180,48 @@ Game.prototype.getCompass = function (svg, centerX, centerY, radius) {
  * @param {*} found 
  * @param {*} expected 
  */
-Game.prototype.assert = (found, expected)=> {
+Game.prototype.assertMatches = (found, expected) => {
   if (found !== expected)
     throw new Error("<b>Found:</b><span class='console'>" + found + "</span> <p><b>Expected:</b><span class='console'>" + expected + '</span>');
+}
+
+/**
+ * Checks the input against the target, throws error if not matches. Increases this.currentLog!
+ * @param {string} input user consolelog input, may have \n newlines
+ * @param {array} target array with the target to meet for every line
+ */
+Game.prototype.checkInputAgainstTarget = function(input, target) {
+  // special case: user may link the inputs via \n
+  let inp = input.split('\n')
+
+  inp.forEach(line => {
+    // check: are we out of bounds (= do we have a new line when we don't want to have any?)
+    if (this.currentLog >= target.length)
+      this.assertMatches('_more console lines_', 'nothing');
+
+    // make sure the input line matches the expected line
+    this.assertMatches(line, target[this.currentLog]);
+
+    this.currentLog++;
+
+
+  })
+}
+
+/**
+ * Implementation of the end() function for those games where an input must be checked line for line against a target array.
+ * Depends on this.currentLog!
+ * @param {array} target array with the target to meet for every line
+ * @param {string} successMessage optional. Success message when everything was right
+ */
+Game.prototype.endCheckInputAgainstTarget = (target, successMessage) => {
+  // we landed here because we processed all inputs.
+  let sol = target;
+
+  // check: did we get not enough input?
+  if (this.currentLog < sol.length)
+    this.assertMatches("nothing", sol[Math.max(this.currentLog, 0)]);
+
+  // we have enough input. Finish!
+  CODE.success(successMessage);
 }

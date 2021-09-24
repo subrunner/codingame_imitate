@@ -319,36 +319,13 @@ solution: `....................
   }
 
   consolelog = (args) => {
-    // special case: user may link the inputs via \n
-    let inp = args[0].split('\n'),
-      tc = CODE.C.testcase;
-
-    inp.forEach(line => {
-      // check: are we out of bounds (= do we have a new line when we don't want to have any?)
-      if (this.currentLog >= tc.solution.length)
-        this.assert('_more console lines_', 'nothing');
-
-      // make sure the input line matches the expected line
-      this.assert(line, tc.solution[this.currentLog]);
-
-      this.currentLog++;
-
-      
-    })
+    this.checkInputAgainstTarget(args[0], CODE.C.testcase.solution);
   }
 
   
 
   end = () => {
-    // we landed here because we processed all inputs.
-    let sol = CODE.C.testcase.solution;
-
-    // check: did we get not enough input?
-    if (this.currentLog < sol.length)
-      this.assert("nothing", sol[this.currentLog]);
-
-    // we have enough input. Finish!
-    CODE.success('Correct asteroid extrapolations.');
+    this.endCheckInputAgainstTarget(CODE.C.testcase.solution, 'You are making progress in getting the computer to work for you!');    
   }
 
   codeTemplate = `
