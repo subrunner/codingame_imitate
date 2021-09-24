@@ -13,6 +13,9 @@ console.log('first');`;
   input = "Was der Programmierer als Input erwarten kann<p>Ein String. Mit <span class='console'>await readline()</span> einlesen.";
   output = "Was der Programierer als Output produzieren soll<p>Der String, der als Input geliefert wurde - <span class='console'>console.log(input)</span>";
   skills = ["Read Input","Write Output"];
+
+  readlineSleep = 200;
+
   /**
    * the CODE.SKILLLEVEL level
    */
@@ -170,4 +173,14 @@ Game.prototype.getCompass = function (svg, centerX, centerY, radius) {
   svg.push('<text x="' + x + '" y="' + y + '" dx="4" dy="10" class="mixedDir">SE</text>');
 
   return svg;
+}
+
+/**
+ * Throws an error if found !== expected
+ * @param {*} found 
+ * @param {*} expected 
+ */
+Game.prototype.assert = (found, expected)=> {
+  if (found !== expected)
+    throw new Error("<b>Found:</b><span class='console'>" + found + "</span> <p><b>Expected:</b><span class='console'>" + expected + '</span>');
 }

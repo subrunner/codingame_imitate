@@ -20,7 +20,7 @@
     }
   };
 
-  CODE.SKILLLEVELS = ["Starting","Easy","Medium","Hard"];
+  CODE.SKILLLEVELS = ["Starting", "Easy", "Medium", "Hard"];
 
   // configuration - chosen game, current testcase, etc.
   CODE.CONFIG = CODE.CONFIG || {
@@ -33,7 +33,7 @@
   CODE.C = CODE.CONFIG;
 
   // success: disrupts the eval execution and tells the user of the success
-  function success (message)  {
+  function success(message) {
     // remember our success
     if (CODE.C.isBlindTests) {
       CODE.C.successfulReleasetests[CODE.C.chosenTestcase] = true;
@@ -78,7 +78,10 @@
       console._log(...args);
 
       // write to our output div
-      writeToResult("<div class='log'>" + args.join(" ") + "</div>");
+      writeToResult("<div class='log'>" + args.map(arg => {
+        let a = prettyprint(arg);
+        return a.replace(/\n/g, "</div><div class='log'>")
+      }).join(" ") + "</div>");
     }
 
     // give it to our game logic
@@ -87,6 +90,41 @@
     // display
     if (!CODE.C.isBlindTests)
       CODE.G.updateGameArea();
+  }
+
+  function prettyprint(a) {
+    let ret = [];
+    let content = [];
+
+    if (Array.isArray(a)) {
+      ret.push('[');
+      a.forEach(val => content.push(prettyprint(val)));
+      ret.push(content.join(', '));
+      ret.push(']');
+
+    } else {
+
+      switch (typeof a) {
+        case 'object':
+          ret.push('{');
+          Object.keys(a).forEach(key => {
+            content.push(' ' + key + ': ');
+            content.push(prettyprint(a[key]));
+          });
+          ret.push(content.join(', '));
+          ret.push('}');
+          break;
+
+
+
+        default:
+          // everything else: use the string representation!
+          ret.push(a + "");
+
+      }
+    }
+
+    return ret.join('');
   }
 
   console.error = function (...args) {
@@ -99,7 +137,10 @@
     console._error(...args);
 
     // write to our output div
-    writeToResult("<div class='log error'>" + args.join(" ") + "</div>");
+    writeToResult("<div class='log error'>" + args.map(arg => {
+      let a = prettyprint(arg);
+      return a.replace(/\n/g, "</div><div class='log'>")
+    }).join(" ") + "</div>");
   }
 
 
@@ -130,7 +171,7 @@
    * @param {HTMLElement} elTestcase must be set unless it is a blind test!
    */
   async function executeCode(code, elTestcase) {
-    
+
     // now prepare our game!
     CODE.GAME.prepareTestcase();
 
@@ -145,10 +186,10 @@
       elTestcase.classList.add("loading");
     }
 
-    
+
     // do our evaluation!
     await eval("(async () => { " + code + "\nCODE.G.end()})()");
-    
+
     if (!CODE.C.isBlindTests) {
       // stop loading
       elTestcase.classList.remove("loading");
@@ -162,7 +203,7 @@
   async function playAllTestcases() {
     let code = myCodeMirror.getValue(),
       testcases = CODE.C.testcases,
-      elPlayAll = document.getElementById(CODE.C.isBlindTests? "releaseBtn":"playallBtn");
+      elPlayAll = document.getElementById(CODE.C.isBlindTests ? "releaseBtn" : "playallBtn");
 
     // show that we are doing something
     elPlayAll.classList.add("loading");
@@ -295,8 +336,8 @@
       document.getElementById('successNumber').innerHTML = "Passed <span>" + successes + " / " + numberCases + "</span> test cases.";
 
       // in case we have solved all ui cases, tell the user
-      if (successes === numberCases){
-        showPopup("Test Success","You have solved all testcases. Now it is time to test your code by releasing it.<p>Press the 'Release' button to see how it fares in the wild!");
+      if (successes === numberCases) {
+        showPopup("Test Success", "You have solved all testcases. Now it is time to test your code by releasing it.<p>Press the 'Release' button to see how it fares in the wild!");
       }
       // in case we have solved all ui cases, display the release tests option. Otherwise, hide it.
       document.getElementById('releaseBtn').style.display = (successes === numberCases) ? null : "none";
@@ -332,8 +373,11 @@
 
     if (!CODE.C.isBlindTests)
       // wait a bit before actually performing the reading during UI tests!
-      await sleep(200);
-    return CODE.GAME.readline();
+      await sleep(CODE.G.readlineSleep);
+    let ret = CODE.GAME.readline();
+    if (!CODE.C.isBlindTests)
+      console._log("Game readline ", ret);
+    return ret;
   }
 
 
