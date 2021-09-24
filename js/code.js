@@ -127,24 +127,32 @@
   /**
    * Executes the code. May throw errors!
    * @param {string} code code that the user entered
+   * @param {HTMLElement} elTestcase must be set unless it is a blind test!
    */
-  async function executeCode(code) {
-    //console._log("executeCode " + code);
-
+  async function executeCode(code, elTestcase) {
+    
     // now prepare our game!
     CODE.GAME.prepareTestcase();
 
     if (!CODE.C.isBlindTests) {
       CODE.GAME.updateGameArea(true);
+
       // reset the code output
       document.getElementById("result").innerHTML = "";
+
+      // signal we started processing
+      elTestcase = document.getElementById("testcase_" + CODE.C.chosenTestcase);
+      elTestcase.classList.add("loading");
     }
 
-    //console._log("eval");
-
+    
     // do our evaluation!
     await eval("(async () => { " + code + "\nCODE.G.end()})()");
-    console._log("after eval");
+    
+    if (!CODE.C.isBlindTests) {
+      // stop loading
+      elTestcase.classList.remove("loading");
+    }
   }
 
   /**
@@ -153,16 +161,21 @@
    */
   async function playAllTestcases() {
     let code = myCodeMirror.getValue(),
-      testcases = CODE.C.testcases;
+      testcases = CODE.C.testcases,
+      elPlayAll = document.getElementById(CODE.C.isBlindTests? "releaseBtn":"playallBtn");
+
+    // show that we are doing something
+    elPlayAll.classList.add("loading");
 
     // execute all testcases
     for (let i = 0; i < testcases.length; i++) {
+      let elTestcase = document.getElementById("testcase_" + i);
       CODE.C.chosenTestcase = i;
       CODE.C.testcase = testcases[i];
 
       if (!CODE.C.isBlindTests) {
         // scroll testcase into view
-        document.getElementById("testcase_" + i).scrollIntoView();
+        elTestcase.scrollIntoView();
       }
 
       // execute code
@@ -177,6 +190,9 @@
         }
       }
     }
+
+    // signal that we are done
+    elPlayAll.classList.remove("loading");
 
     // show stuff for release tests in case of errors
     showSuccessfulTestcases(true);
@@ -220,6 +236,9 @@
 
     // no success: log it!
     console._error(e);
+
+    // give the game a chance to display
+    CODE.G.updateGameArea();
 
     // show in testcase
     document.getElementById("testcase_" + CODE.C.chosenTestcase).className = "btn testcase error";

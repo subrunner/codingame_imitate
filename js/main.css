@@ -33,18 +33,57 @@ h1 {
   padding: 20px;
 }
 
+.btn.loading {
+  /* loading button: stop the button from reacting, show some CSS animation... */
+  pointer-events: none;
+  color: #ddd;
+  border-color: #ddd;
+  position: relative;
+}
+
+/* CSS animation */
+
+@keyframes loadinganimation {
+  from {
+    transform: rotate(0deg)
+  }
+  to {
+    transform: rotate(360deg)
+  }
+}
+
+.btn.loading::after {
+  /* the animated content... */
+  content: '❍' !important;
+  position: absolute;
+  right: calc(50% - 10px) !important;
+  color: black;
+  font-weight: bold;
+  animation-name: loadinganimation;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  font-family: Courier;
+  font-size: 24px;
+  top: 5px;
+}
+
 #code {
-  height: 90vh;
+  /* height: view - menu - padding */
+  height: calc(100vh - 42px - 40px);
 }
 
 #codearea {
   border: 1px solid black;
   background: #eaeaea;
+  font-size: 13px;
+  /* height of sourcecode area - height of testcases - some padding */
+  height: calc(100% - 100px);
 }
 
 .CodeMirror {
-  height: calc(90vh - 100px - 10px);
-  /* height of sourcecode area - height of testcases - some padding */
+  height: 100%;
+  
 }
 
 .view {
@@ -63,8 +102,7 @@ h1 {
   overflow: auto;
 }
 
-.playall,
-.release {
+.playall, .release {
   display: inline-block;
 }
 
@@ -74,6 +112,13 @@ h1 {
   width: 50%;
   overflow: auto;
   display: inline-block;
+}
+
+#testcases .testcase::before,
+.playall::before,
+.release::before {
+  content: '▶';
+  padding-right: 5px;
 }
 
 #testcases .success {
@@ -147,7 +192,8 @@ span.console {
 }
 
 .resultbody {
-  height: 90vh;
+  /* height: view - menu - padding */
+  height: calc(100vh - 42px - 40px);
   display: flex;
   flex-flow: column;
 }
@@ -194,12 +240,15 @@ span.console {
   z-index: 10;
 }
 
+#game {
+  position: relative;
+}
+
 #gameChoice {
   background: #eaeaea;
   padding: 20px;
   /* height of view - height of menu - padding */
   min-height: calc(100vh - 42px - 40px);
-  
 }
 
 #gameChoice .games {

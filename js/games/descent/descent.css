@@ -1,0 +1,64 @@
+svg .mountainLabel {
+  stroke: white;
+  fill: white;
+  font-size: 20px;
+}
+
+svg .mountain {
+  transition: transform 0.2s;
+  fill: #666;
+  stroke: black;
+  stroke-width: 10;
+  stroke-linejoin: round;
+}
+
+svg .ground {
+  fill: black;
+}
+
+#ufo {
+  /* ufo has a ratio of 8:3*/
+  background: url('./ufo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  /* 100% is 800 svg units. Ship is 50/3*8 = 400/3 units, that means 400/(3*800) = 1/6 = 16.66% width*/
+  width: 16.66%;
+  /* enough to cover 50 svg units vertically */
+  height: 12.5%;
+  position: absolute;
+  top: 0;
+  /* hide the ship half a mountain away */
+  left: -8.33%;
+  
+}
+
+.ufoAnimation {
+  transition: left 1s, top 1s;
+  transition-timing-function: linear;
+}
+
+#shot {
+  /* cover 25x25 svg units */
+  width: 6.25%;
+  height: 12.5%;
+  position: absolute;
+  /* hide behind ufo */
+  top: 0;
+  left: -2.9%;
+}
+
+#crash {
+  background: url('./explosion.png');
+  background-size: contain;
+  display: none;
+  height: 15%;
+  width: 13%;
+  position: absolute;
+}
+
+.shootAnimation {
+  background: url('../thor/light.png');
+  background-size: cover;
+  /*animation-name: shoot;*/
+  transition: top 0.5s;
+}
