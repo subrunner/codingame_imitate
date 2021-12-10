@@ -332,7 +332,7 @@ solution: `....................
 /**
  * Auto-generated code below aims at helping you parse
  * the standard input according to the problem statement.
- * For debugging, use console.error('')
+ * For debugging, use console.debug('')
  **/
 
 var inputs = (await readline()).split(' ');

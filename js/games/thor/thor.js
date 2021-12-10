@@ -247,7 +247,7 @@ while (true) {
   const remainingTurns = parseInt(await readline()); // The remaining amount of turns Thor can move. Do not remove this line.
 
   // Write an action using console.log()
-  // To debug: console.error('Debug messages...');
+  // To debug: console.debug('Debug messages...');
 
 
   // A single line providing the move to be made: N NE E SE S SW W or NW

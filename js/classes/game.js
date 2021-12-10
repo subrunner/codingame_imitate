@@ -22,19 +22,25 @@ console.log('first');`;
   skillLevel = 0;
 
   testcases = [{
-    name: "first testcase",
+    name: "Input 'first'",
     output: "first"
   }, {
-    name: "second testcase",
+    name: "Input 'second'",
     output: "second"
+  }, {
+    name: "Input '123'",
+    output: "123"
+  }, {
+    name: "Random Input",
+    output: Math.random() + ""
   }];
 
   releasetests = [{
     name: "first releasetest",
-    output: "hello!"
+    output: "first"
   }, {
     name: "second releasetest",
-    output: "second"
+    output:  Math.random() + ""
   }, {
     name: "third releasetest",
     output: "234§"
@@ -90,8 +96,9 @@ console.log('first');`;
    */
   consolelog = function (args) {
     this.outputs.push(args[0]);
-    if (args[0] === CODE.C.testcase.output)
-      CODE.success("Erfolgreich den Input '" + args[0] + "' an den Output weitergegeben!");
+    if (args[0] !== CODE.C.testcase.output)
+      throw new Error("Expected output: '" + CODE.C.testcase.output + "', found '" + args[0] + "'.");
+    CODE.success("Erfolgreich den Input '" + args[0] + "' an den Output weitergegeben!");
   }
 
   /**
@@ -190,7 +197,7 @@ Game.prototype.assertMatches = (found, expected) => {
  * @param {string} input user consolelog input, may have \n newlines
  * @param {array} target array with the target to meet for every line
  */
-Game.prototype.checkInputAgainstTarget = function(input, target) {
+Game.prototype.checkInputAgainstTarget = function (input, target) {
   // special case: user may link the inputs via \n
   let inp = input.split('\n')
 

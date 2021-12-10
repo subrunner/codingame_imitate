@@ -69,7 +69,7 @@
    */
   console._log = console.log;
   console._error = console.error;
-  //console._debug = console.debug;
+  console._debug = console.debug;
 
   console.log = function (...args) {
     // in case of blind tests, just give it directly to the game
@@ -127,6 +127,22 @@
     return ret.join('');
   }
 
+  console.debug = function(...args){
+    // in case of blind tests, do nothing
+    if (CODE.C.isBlindTests) {
+      return;
+    }
+
+    // traditional logging - don't do debug but normal logging...
+    console._log(...args);
+
+    // write to our output div
+    writeToResult("<div class='log debug'>" + args.map(arg => {
+      let a = prettyprint(arg);
+      return a.replace(/\n/g, "</div><div class='log'>")
+    }).join(" ") + "</div>");
+  }
+
   console.error = function (...args) {
     // in case of blind tests, do nothing
     if (CODE.C.isBlindTests) {
@@ -137,7 +153,7 @@
     console._error(...args);
 
     // write to our output div
-    writeToResult("<div class='log error'>" + args.map(arg => {
+    writeToResult("<div class='error'>" + args.map(arg => {
       let a = prettyprint(arg);
       return a.replace(/\n/g, "</div><div class='log'>")
     }).join(" ") + "</div>");
@@ -313,7 +329,7 @@
       processedStack.push("<div class='stack'>" + functionName + " - line " + linenumber + "</div>");
     });
 
-    writeToResult("<div class='log error'>" + processedStack.join("") + "</div>");
+    writeToResult("<div class='error'>" + processedStack.join("") + "</div>");
 
 
   }
@@ -325,12 +341,13 @@
   function showSuccessfulTestcases(showBlindtestResult = false) {
     let successes = 0,
       numberCases = CODE.G.testcases.length,
-      totalCases = numberCases + CODE.G.releasetests.length;
+      releaseCases = CODE.G.releasetests.length;
 
-    CODE.C.successfulTestcases.forEach(s => s ? successes++ : "");
-
+    
     // non-blind tests: display result
     if (!CODE.C.isBlindTests) {
+
+      CODE.C.successfulTestcases.forEach(s => s ? successes++ : "");
 
       // successful testcases
       document.getElementById('successNumber').innerHTML = "Passed <span>" + successes + " / " + numberCases + "</span> test cases.";
@@ -345,17 +362,17 @@
     } else if (showBlindtestResult) {
 
       // overall success: add the releasetest successes
-      CODE.C.successfulReleasetests.forEach((s, id) => s ? successes++ : "");
+      CODE.C.successfulReleasetests.forEach((s) => s ? successes++ : "");
 
       // SUCCESS!
-      if (totalCases === successes) {
-        showPopup("SUCCESS", '<p>Alle ' + CODE.C.testcases.length + ' Releasetests wurden erfolgreich durchgeführt.<div class="success">' + CODE.G.successMessage + "</div>");
+      if (releaseCases === successes) {
+        showPopup("SUCCESS", '<p>Alle ' + releaseCases + ' Releasetests wurden erfolgreich durchgeführt.<div class="success">' + CODE.G.successMessage + "</div>");
         // save the overall success!
         localStorage.setItem("solved_" + CODE.G.id, true);
       } else {
 
         // FAILED at least 1 case
-        let successPercentage = (successes - numberCases) * 100 / CODE.C.testcases.length,
+        let successPercentage = (successes ) * 100 / releaseCases,
           cases = CODE.C.testcases.map((c, i) => "<div class='" + (CODE.C.successfulReleasetests[i] ? "success" : "error") + "'>" + c.name + "</div>");
         successPercentage = Math.round(successPercentage);
         showPopup(successPercentage + "% Success-rate", "Only " + successPercentage + "% of the cases were solved:" + cases.join(""));

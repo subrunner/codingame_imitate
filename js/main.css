@@ -215,6 +215,10 @@ span.console {
   color: red !important;
 }
 
+.debug {
+  color: orange !important;
+}
+
 .stack {
   padding-left: 20px;
 }
@@ -262,6 +266,7 @@ span.console {
   box-shadow: 1px 1px 5px black;
   margin: 10px;
   position: relative;
+  cursor: pointer;
 }
 
 .game .solved {
@@ -282,8 +287,13 @@ span.console {
   cursor: pointer;
 }
 
+.game:hover .title,
 .game .title:hover {
   text-decoration: underline;
+}
+
+.game:hover {
+  background-color: #ffffee;
 }
 
 .game .synopsis {
@@ -328,4 +338,8 @@ img {
 .popup .close {
   float: right;
   margin: 0;
+}
+
+.draggable {
+  margin: 0 !important;
 }

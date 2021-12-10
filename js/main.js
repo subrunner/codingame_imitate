@@ -15,6 +15,8 @@
   }
   elPopup.onclick = closePopup;
   elClose.onclick = closePopup;
+  // make popup draggable by the panel header
+  //CODE.UTILS.dragElement(elPopup.querySelector(".panel"));
 
   function showPopup(title, message) {
     let elPopup = document.getElementById("popup"),
@@ -54,8 +56,8 @@
       html.push('<div class="panel-body"><div class="games">');
       // display them
       level.forEach((game) => {
-        html.push(`<div class="game">
-      <div class="title" onclick="show('game','${game.id}')">${game.title}</div>
+        html.push(`<div class="game" onclick="show('game','${game.id}')">
+      <div class="title" >${game.title}</div>
       <div class="solved">${localStorage.getItem("solved_" + game.id) ? "Solved" : ""}</div>
       <div class="description">${game.description}</div>
       <div class="synopsis">${game.synopsis}</div>
@@ -108,6 +110,7 @@
     }
   }
 
+  
   /**
    * initialize according to hash
    */

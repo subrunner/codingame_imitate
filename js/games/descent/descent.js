@@ -344,7 +344,7 @@ while (true) {
   }
 
   // Write an action using console.log()
-  // To debug: console.error('Debug messages...');
+  // To debug: console.debug('Debug messages...');
 
   console.log('4'); // The index of the mountain to fire on.
 
