@@ -221,12 +221,13 @@ Game.prototype.checkInputAgainstTarget = function (input, target) {
  * @param {array} target array with the target to meet for every line
  * @param {string} successMessage optional. Success message when everything was right
  */
-Game.prototype.endCheckInputAgainstTarget = (target, successMessage) => {
+Game.prototype.endCheckInputAgainstTarget = function(target, successMessage)  {
+  console._log("line: ", this.currentLog, "target: ", target );
   // we landed here because we processed all inputs.
   let sol = target;
 
   // check: did we get not enough input?
-  if (this.currentLog < sol.length)
+  if (!this.currentLog || this.currentLog < sol.length)
     this.assertMatches("nothing", sol[Math.max(this.currentLog, 0)]);
 
   // we have enough input. Finish!
