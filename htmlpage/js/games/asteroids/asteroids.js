@@ -5,8 +5,8 @@ class Asteroids extends Game{
   description = "Extrapolate the position of asteroids from two pictures of the sky";
   synopsis = "<p>You have just been given a job at the Very Large Telescope. Your task is to keep track of all the asteroids that get photographed, in case one comes closer to earth.<p>But there are so many of them, both photographs and asteroids! Thankfully, you are also a budding programmer. You try and make the computer do your work for you.";
   successMessage = "<p>The computer can now do your work for you! You always know where the asteroids are going! <p style='font-size:0.8rem'>As long as they don't move in the third dimension, but whatever...</p>"
-  skillLevel=1;
-  skills = ["Loops"];
+  skillLevel=2;
+  skills = ["Loops", "String Manipulation"];
   readlineSleep = 0;
 
   testcases = [

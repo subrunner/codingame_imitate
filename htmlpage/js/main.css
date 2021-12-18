@@ -207,6 +207,13 @@ span.console {
   overflow: auto;
 }
 
+.quote {
+  padding: 10px 20px;
+  border-radius: 1rem;
+  background: #eee;
+  margin: 10px;
+}
+
 .success {
   color: green !important;
 }

@@ -1,18 +1,56 @@
 #life {
   width: 100%;
   height: 300px;
+  max-height: calc(100vh - 200px);
   border-collapse: collapse;
 }
 
-#life td {
+.life td {
   transition: background-color 0.5s;
   border: 1px solid gray;
 }
 
-#life .live {
+.life .live {
   background-color: black;
 }
 
-#life .dead {
+.life .dead {
   background-color: white;
+}
+
+.life .incorrect-live {
+  background-color: #F00;
+}
+
+.life .incorrect-dead {
+  background-color: #Fbb;
+}
+
+.life .correct-live {
+  background-color: #080;
+}
+
+.life .correct-dead {
+  background-color: #bFb;
+}
+
+.btnPanel .btn {
+  display: inline-block;
+}
+
+.rules .example {
+  display: inline-block;
+  text-align: center;
+  margin: 10px;
+}
+
+.rules .sample {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.rules .sample > p {
+  background: #eee;
+  padding: 10px;
+  border-radius: 1rem;
 }

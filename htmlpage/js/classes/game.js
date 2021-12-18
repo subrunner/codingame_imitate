@@ -194,6 +194,7 @@ Game.prototype.assertMatches = (found, expected) => {
  * @param {array} target array with the target to meet for every line
  */
 Game.prototype.checkInputAgainstTarget = function (input, target) {
+  //console._log("checkInputAgainstTarget", input, target, this.currentLog);
   // special case: user may link the inputs via \n
   let inp = input.split('\n')
 
@@ -218,7 +219,7 @@ Game.prototype.checkInputAgainstTarget = function (input, target) {
  * @param {string} successMessage optional. Success message when everything was right
  */
 Game.prototype.endCheckInputAgainstTarget = function(target, successMessage)  {
-  console._log("line: ", this.currentLog, "target: ", target );
+  //console._log("line: ", this.currentLog, "target: ", target );
   // we landed here because we processed all inputs.
   let sol = target;
 
