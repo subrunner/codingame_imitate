@@ -1,6 +1,6 @@
 class Thor extends Game {
 
-
+  id = "thor";
   title = "Thor - Find the Light!";
   description = 'Help Thor <img src="./js/games/thor/thor.png" style="width:40px;height:40px"> to reach the light <img src="./js/games/thor/light.png" style="width:40px;height:40px"> of power.';
   successMessage = "Thor is now immune against Loki's light-stealing powers. At the very least, he knows how to get it back no matter where Loki hides it. <p>Good job!"
@@ -72,11 +72,6 @@ skills = ["Conditions"];
   ]
 
   svgHtml;
-
-  constructor() {
-    super("thor");
-
-  }
 
   initGameArea = (elPlayingfield) => {
     if (!this.svgHtml) {

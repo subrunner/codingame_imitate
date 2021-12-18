@@ -1,4 +1,5 @@
 class Init extends Game {
+  id="init";
   title = "Einführung";
   description = "Erste Begegnung mit dem Codingame Interface";
   synopsis = "Aller Anfang ist schwer.<p>Dieses 'Spiel' ist nicht so sehr ein Spiel als eine Gelegenheit sich mit den Grundlagen des Interfaces und dem Ablauf vertraut zu machen.";
@@ -31,13 +32,7 @@ console.log('first');
 console.log('second');`;
 
 
-  constructor() {
-    super("init");
-
-
-
-  }
-
+  
   currentPopupStage = 0;
   PopupStages = [{
     title: "Einführung",

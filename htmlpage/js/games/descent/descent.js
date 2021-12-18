@@ -1,4 +1,5 @@
 class Descent extends Game {
+  id = "descent";
   title = "The Descent";
   description = "Destroy the mountains <span style='font-size:2rem'>▲</span> before your starship <img src='./js/games/descent/ufo.png' style='height:40px'> collides with one of them.";
   synopsis = `
@@ -13,9 +14,6 @@ class Descent extends Game {
   skills = ["Loops"];
   cssFile = "./js/games/descent/descent.css";
 
-  constructor() {
-    super("descent");
-  }
 
   testcases = [
     {

@@ -139,26 +139,26 @@ O.O.
     )
   ];
 
-  constructor(){
+  constructor() {
     // call super constructor before this becomes possible
     super();
 
     // Adds some truely random release tests
-    for (let i = 0; i < 3; i++){
+    for (let i = 0; i < 3; i++) {
       let input = [],
         lifeDensity = Math.random(),
-        numberRows = i*5,
-        numberCols = i*7;
-      for (let r = 0; r < numberRows; r++){
+        numberRows = (i + 1) * 5,
+        numberCols = (i + 1) * 7;
+      for (let r = 0; r < numberRows; r++) {
         let row = "";
-        input.push(row);
-        for (let c = 0; c < numberCols; c++){
-          row += Math.random() < lifeDensity? 'O':'.';
+        for (let c = 0; c < numberCols; c++) {
+          row += Math.random() < lifeDensity ? 'O' : '.';
         }
+        input.push(row);
       }
 
       this.releasetests.push(new GameOfLifeTestcase(
-        "Random " + numberRows + "x" + numberCols + " - " + (lifeDensity*100).toFixed(2) + "% popuplation density",
+        "Random " + numberRows + "x" + numberCols + " - " + (lifeDensity * 100).toFixed(2) + "% popuplation density",
         input,
         this.getRandomRules()
       ))
@@ -419,12 +419,12 @@ class GameOfLifeTestcase {
       // no output available: calculate the expected output
       this.output = this.calculateExpectedOutput();
     }
-   
+
   }
 
-  calculateExpectedOutput(){
+  calculateExpectedOutput() {
     let outputField = GameOfLifeSimulator.calculateOutput(this);
-    
+
     // translate back from field to output format
     return outputField.map(outputRow => outputRow.map(cell => cell ? 'O' : '.').join(''))
   }
