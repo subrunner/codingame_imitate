@@ -251,6 +251,14 @@ span.console {
   z-index: 10;
 }
 
+.menu a {
+  color: white;
+}
+
+.menu a.btn:hover {
+  background: #666;
+}
+
 #game {
   position: relative;
 }

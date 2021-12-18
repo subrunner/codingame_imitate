@@ -21,7 +21,7 @@ for (let i = 0; i < H; i++){
 // Debugging mit console.debug(...)
 console.log('...');`;
   rules =  `
-  <p>Was genau Conway's Game of Life ist hat du in <a href="#gameoflife">Teil I</a> schon kennen gelernt. Hier noch 
+  <p>Was genau Conway's Game of Life ist hat du in <a href="#game:gameOfLife">Teil I</a> schon kennen gelernt. Hier noch 
     einmal kurz die Regeln wie sich die Zellen entwickeln:
   <ul>
     <li><b>Überleben:</b> Eine zu <span class="var">t</span> lebendige Zelle ist in <span class="var">t + 1</span>
