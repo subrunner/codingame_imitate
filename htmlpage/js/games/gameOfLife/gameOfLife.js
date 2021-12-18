@@ -4,7 +4,7 @@ class GameOfLife extends Game {
   title = "Conway's Game of Life I";
   description = "Einen Schritt in Conway's Game of Life simulieren";
   synopsis = "Deine Aufgabe ist es, einen Simulator für zelluläre Automaten zu schreiben. Dein Boss gibt dir die Aufgabe, dich zuerst einmal mit den Regeln vertraut zu machen, bevor er dich an das eigentliche Projekt lässt.";
-  successMessage = "Du hast das Spiel des Lebens gemeistert! Naja, den Anfang, aber aller Anfang ist schwer. Mach mit Teil II weiter!";
+  successMessage = "Du hast das Spiel des Lebens gemeistert! Naja, den Anfang. Aber aller Anfang ist schwer, und jetzt kannst du deinem Boss zeigen was du drauf hast. Mach mit Teil II weiter!";
   codeTemplate = `// Code Template zum Einlesen der Variablen.
 // Dieses Template darf selbstverständlich verändert werden!
 const H = parseInt(await readline());
@@ -145,9 +145,14 @@ console.log('...');`;
   output = "Simulation des Spielfeldes nach 1 Schritt Conway's Game. <span class='var'>H</span> Zeilen mit einem String der Länge <span class='var'>W</span>, der den Tot- oder Lebendig-Status der Zellen in der Zeile angibt.<p>Beispiel:  <span class='console'>...<br>OOO<br>...</span>";
   skills = ["String Manipulation", "Loops", "Conditions"];
   skillLevel = 2;
+  // how many lines need to be read via readline() before user gets the testcase input
+  numberLinesInitialRead = 2;
 
   // css file - should be the same for all games of life!
   cssFile = "./js/games/gameOfLife/gameOfLife.css";
+
+  // we don't need to wait between readlines, because we aren't rendering anything!
+  readlineSleep = 0;
   
   /**
    * The rules for a Conway game of life
@@ -320,17 +325,40 @@ O.O.
   }
 
   readline = () => {
-    let tc = CODE.C.testcase;
+    let tc = CODE.C.testcase,
+      line;
+    // are we still initializing, or reading the game of life input?
     if (this.currentRead < 0) {
       // initial line
-      this.currentRead++;
-      return tc.dim.join(' ') + " " + tc.numberTurns;
+      line = this.readInit(this.currentRead);
 
+    } else {
+      // testcase input
+      line = tc.input[this.currentRead];
     }
-    return CODE.C.testcase.input[this.currentRead++];
+
+    // increment our read pointer
+    this.currentRead++;
+    return line;
+  }
+
+  /**
+   * 
+   * @param {number} lineIndex the this.currentRead index of the input line the user wants to read - 
+   *  any line before the actual testcase input reading!
+   * @returns the line
+   */
+  readInit = (lineIndex) => {
+    let tc = CODE.C.testcase;
+    switch(lineIndex){
+      case -2: return tc.dim[0];
+      case -1: return tc.dim[1];
+      default: throw Error("We should not have landed here in state " + lineIndex);
+    }
   }
 
   prepareTestcase = () => {
+    this.currentRead = (-1) * this.numberLinesInitialRead;
     this.currentLog = 0;
     this.currentUserLog = [];
   }
@@ -697,7 +725,7 @@ class GameOfLifeTestcase {
     if (!output) {
       // no output available: calculate the expected output
       this.output = this.calculateExpectedOutput();
-      console._log(this);
+      //console._log(this);
     }
 
   }

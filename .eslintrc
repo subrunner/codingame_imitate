@@ -10,6 +10,7 @@
     "CODE": true,
     "Game": true,
     "GameOfLife": true,
+    "GameOfLifeTestcase": true,
     "Promise": true,
     "window": true,
     "console": true
