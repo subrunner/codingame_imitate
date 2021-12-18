@@ -296,7 +296,7 @@ solution: `....................
   }];
 
   prepareTestcase = () => {
-    let tc = CODE.C.testcase;
+    //let tc = CODE.C.testcase;
     this.currentRead = -1;
     this.currentLog = 0;
   }

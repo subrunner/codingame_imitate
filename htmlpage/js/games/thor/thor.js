@@ -169,9 +169,9 @@ skills = ["Conditions"];
       if (this.currentTurn > 0) {
         return this.currentTurn;
       }
-      else {
+      
         throw new Error("Exceeded nuber turns!");
-      }
+      
     }
     this.hasStarted = true;
     return this.light.join(" ") + " " + this.currentThor.join(" ");

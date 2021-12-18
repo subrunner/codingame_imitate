@@ -5,4 +5,4 @@ losing all programming progress.
 
 ## Use
 
-Copy all files in the repository to your hard drive, and then open `main.html` in any current browser.
+Copy all files in from the htmlpage folder to your hard drive, and then open `main.html` in any current browser.

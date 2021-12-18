@@ -303,7 +303,7 @@ console.log('second');`;
     }
   }
 
-  initGameArea = (elPlayingfield) => {
+  initGameArea = (/*elPlayingfield*/) => {
     // create popup to navigate through init
     if (!this.elPopup) {
       // create our guidance popup

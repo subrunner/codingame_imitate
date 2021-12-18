@@ -1,0 +1,33 @@
+{
+  "extends": "eslint:recommended",
+
+  // use the babel parser to be able to use static test = {} class variables
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 10
+  },
+  "globals": {
+    "CODE": true,
+    "Game": true,
+    "GameOfLife": true,
+    "Promise": true,
+    "window": true,
+    "console": true
+  },
+  "plugins": [
+    "json"
+  ],
+  "env": {
+    "browser": true,
+    "jquery": true,
+    "node": true
+  },
+  "rules": {
+    // additional rules from base configurations
+    //"eqeqeq": 2,
+    // allow console statements
+    "no-console": 0,
+    //"no-else-return": 2
+    //"no-unused-vars": 2
+  }
+}

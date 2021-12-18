@@ -1,0 +1,31 @@
+{
+  "name": "codingame",
+  "version": "1.0.0",
+  "description": "An attempt to copy [Codingame](https://www.codingame.com) for local offline use and without installing a server of any kind. As such, the only available programming language is Javascript, and deleting the browser cache means  losing all programming progress.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --watch htmlpage -e js --exec grunt",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/subrunner/codingame_imitate.git"
+  },
+  "author": "subrunner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/subrunner/codingame_imitate/issues"
+  },
+  "homepage": "https://github.com/subrunner/codingame_imitate#readme",
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/eslint-parser": "^7.16.5",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-json": "^1.4.0",
+    "grunt": "^1.4.1",
+    "grunt-eslint": "^21.0.0",
+    "load-grunt-tasks": "^5.1.0",
+    "nodemon": "^2.0.15"
+  }
+}

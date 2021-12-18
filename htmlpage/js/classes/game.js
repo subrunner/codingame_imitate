@@ -1,5 +1,5 @@
 class Game {
-
+  id = "gameID";
   title = "Titel";
   description = "Kurze Beschreibung";
   synopsis = "Spielewelt";
@@ -50,10 +50,6 @@ console.log('first');`;
   cssFile = "";
 
 
-  constructor(id) {
-    this.id = id;
-  }
-
   /**
    * returns the desired input
    */
@@ -66,7 +62,7 @@ console.log('first');`;
    */
   prepareTestcase = () => {
     // fetch the testcase
-    let testcase = CODE.C.testcase;
+    //let testcase = CODE.C.testcase;
     this.outputs = [];
   }
 
