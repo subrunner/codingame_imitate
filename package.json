@@ -4,7 +4,7 @@
   "description": "An attempt to copy [Codingame](https://www.codingame.com) for local offline use and without installing a server of any kind. As such, the only available programming language is Javascript, and deleting the browser cache means  losing all programming progress.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --watch htmlpage -e js --exec grunt",
+    "start": "nodemon --watch htmlpage -e js,scss --exec grunt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,7 +25,9 @@
     "eslint-plugin-json": "^1.4.0",
     "grunt": "^1.4.1",
     "grunt-eslint": "^21.0.0",
+    "grunt-sass": "^3.1.0",
     "load-grunt-tasks": "^5.1.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "node-sass": "^7.0.0"
   }
 }

@@ -1,0 +1,32 @@
+.taschenrechner {
+  max-width: 400px; }
+  .taschenrechner .label {
+    width: 200px;
+    text-align: right;
+    font-weight: bold;
+    display: inline-block;
+    padding-right: 10px; }
+    .taschenrechner .label::after {
+      content: ":"; }
+  .taschenrechner .row {
+    padding: 10px; }
+  .taschenrechner .label + * {
+    display: inline-block; }
+  .taschenrechner button {
+    float: right; }
+    .taschenrechner button + .row {
+      clear: both; }
+
+#jarvis {
+  border: 1px solid black;
+  border-radius: 1rem;
+  background-color: #eee;
+  padding: 10px;
+  margin: 10px;
+  clear: both; }
+  #jarvis::before {
+    content: "Jarvis:\a";
+    font-weight: bold;
+    white-space: pre; }
+
+/*# sourceMappingURL=simpleui.css.map */

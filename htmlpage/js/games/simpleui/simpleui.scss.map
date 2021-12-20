@@ -1,0 +1,9 @@
+{
+	"version": 3,
+	"file": "simpleui.scss",
+	"sources": [
+		"simpleui.scss"
+	],
+	"names": [],
+	"mappings": "AAAA,AAAA,MAAM,CAAC;EACL,KAAK,EAAE,KAAK;EACZ,UAAU,EAAE,KAAK;EACjB,WAAW,EAAE,IAAI,GAIlB;EAPD,AAIE,MAJI,AAIH,OAAO,CAAC;IACP,OAAO,EAAE,GAAG,GACb"
+}

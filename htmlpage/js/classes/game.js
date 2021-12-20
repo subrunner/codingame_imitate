@@ -188,7 +188,7 @@ Game.assertMatches = (found, expected, msg="") => {
   if (found !== expected){
     if (msg)
       msg += "<br>";
-    throw new Error("<b>Found:</b><span class='console'>" + found + "</span> <p><b>Expected:</b><span class='console'>" + expected + '</span>');
+    throw new Error(msg + "<b>Found:</b><span class='console'>" + found + "</span> <p><b>Expected:</b><span class='console'>" + expected + '</span>');
   }
 }
 
