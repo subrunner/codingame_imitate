@@ -182,10 +182,14 @@ Game.prototype.getCompass = function (svg, centerX, centerY, radius) {
  * Throws an error if found !== expected
  * @param {*} found 
  * @param {*} expected 
+ * @param {string} msg optional message to print
  */
-Game.prototype.assertMatches = (found, expected) => {
-  if (found !== expected)
+Game.assertMatches = (found, expected, msg="") => {
+  if (found !== expected){
+    if (msg)
+      msg += "<br>";
     throw new Error("<b>Found:</b><span class='console'>" + found + "</span> <p><b>Expected:</b><span class='console'>" + expected + '</span>');
+  }
 }
 
 /**
@@ -201,10 +205,10 @@ Game.prototype.checkInputAgainstTarget = function (input, target) {
   inp.forEach(line => {
     // check: are we out of bounds (= do we have a new line when we don't want to have any?)
     if (this.currentLog >= target.length)
-      this.assertMatches('_more console lines_', 'nothing');
+      Game.assertMatches('_more console lines_', 'nothing');
 
     // make sure the input line matches the expected line
-    this.assertMatches(line, target[this.currentLog]);
+    Game.assertMatches(line, target[this.currentLog]);
 
     this.currentLog++;
 
