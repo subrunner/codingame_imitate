@@ -1,4 +1,4 @@
-class TaschenrechnerJarvis extends Game {
+class TaschenrechnerJarvis extends HTMLGame {
   id = "taschenrechnerJarvis";
   title = "Taschenrechner für JARVIS";
   description = "Baue JARVIS eine Webseite mit einem simplen Taschenrechners der nur addieren kann";
@@ -15,78 +15,57 @@ class TaschenrechnerJarvis extends Game {
     <p>Hilf JARVIS, indem du ihm eine Webseite programmierst, die die Addition für ihn übernimmt!
   `;
   successMessage = "<b>JARVIS:</b> <br>Vielen herzlichen Dank für deine Hilfe! Jetzt kann ich zumindest die Ergebnisse überprüfen, bei denen ich mir nicht sicher bin. Wenn es wieder mal was geben sollte, werde ich mich an dich wenden!";
-  codeTemplate = `/**
-* JS Code hier
-*
-* Es wird nicht erwartet, dass Inputs mit await readline() eingelesen
-* werden, sondern dass HTML-Elemente generiert werden.
-*
-* Verwende das elRoot-Element um dort den DOM-Tree aufzubauen.
-*
-* Die Testcases sagen dir, ob du alles korrekt erstellt hast.
-*/
+  codeTemplate = `<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  
+  <!-- Überschrift -->
+  <h1>Meine Überschrift</h1>
+  
+  <!-- Erster Summand -->
+  Erstens:
+  <input id="in1" type="text">
+  
+  <!-- zweiter Summand -->
+  Zweitens:
+  <input>
+  
+  <!-- Submit-Button -->
+  <!--<button id="submit">los gehts</button>-->
+  
+  <!-- Ergebnis -->
+  <div>__Hier kommt die Ausgabe rein__</div>
+      
+  <!-- 
+      JavaScript Code - am Ende einfügen damit die HTML-Element
+      bereits existieren
+  -->
+  <script type="text/javascript">
+    // make the button clickable
+    var elButton = document.getElementById("submit");
+    elButton.onclick = function (){
+      console.debug("Submitbutton clicked");
 
-// Wurzel-Element, innerhalb von dem der Code geschrieben werden soll
-const elRoot = document.getElementById("uiTarget");
+      // use try-catch to intercept any programming errors you might
+      // cause, so that you know where you went wrong
+      try{
+        // fetch the input values
+        let elIn1 = document.getElementById("in1"),
+          in1 = elIn1.value,
+          in2 = 3;
 
-// Überschrift erstellen
-const elHeader = document.createElement("h1");
-elHeader.innerHTML = "Meine Überschrift!"; // TODO: richtiger Text
-elRoot.append(elHeader);
-
-// Hier musst du jetzt die Elemente erstellen!
-
-// erstes Input-Feld
-// const elInput1 = document.createElement("input");
-// elInput1.id="ersterSummand";
-// elInput1.type="text";
-
-// zweites Input-Feld
-// const elRow2 = document.createElement("div");
-// elRow2.className = "row";
-// elRow2.innerHTML = '<div class="label">Zweiter Summand</div>'
-//    + '<input type="text">'
-//    + '</div>';
-
-// Submit-Button
-// const button = document.createElement("button");
-// button.onclick = function(){ calc() };
-
-// Ergebnis
-// const elErgebnis = document.createElement("div");
-// elErgebnis.innerHTML = '-';
-
-/**
- * This function reads the two text inputs, calculates the sum, and
- * writes the result to the page.
- * 
- * Prepend the function name with 'window.' so that it works with
- * the testcases. In a normal HTML page, that is unnecessary!
- */
-window.calc = function(){
-  try{
-    let ersterSummand = document.getElementById("ersterSummand");
-    let wertErsterSummand = ersterSummand.value;
-
-    alert("Erster Summand ist " + wertErsterSummand);
-    
-    // TODO 
-    // - zweiten Summand einlesen
-    // - Ergebnis berechnen
-    // - Ergebnis schreiben
-    // Hinweise: wertErsterSummand = parseInt(asdf) versucht den Inhalt
-    // der Variable asdf in eine ganze Zahl umzuwandeln
-  } catch(e) {
-    // error happened: tell the user
-    // use alert only for debugging, never for actual production
-    // code - because it is annoying and has some side effects
-    // that you do not want in live code...
-    alert(
-      "Es ist ein Fehler aufgetreten: " + e 
-    );
-  }
-}
-
+        // write it to the Ergebnis section
+        document.getElementById( "ergebnis" ).innerHTML = in1 + in2;
+      } catch( error ){
+        // make the error visible
+        console.error( "Submit error: " + error );
+      }
+    }
+  </script>
+</body>
+</html>
 `;
   rules = `
     <p>Aufgabe ist es, mit Hilfe von Javascript ein kleines HTML-Formular zu erstellen, bei dem der User 2 Zahlen
@@ -295,7 +274,10 @@ window.calc = function(){
         // steht danach auch das richtige drin?
         switch (result) {
           case "23":
-            throw new Error("Du hast vergessen, die Input-Werte 2 und 3 in eine Zahl umzuwandeln vor dem Addieren!");
+            throw new Error(`Du hast vergessen, die Input-Werte 2 und 3 in eine Zahl umzuwandeln vor 
+              dem Addieren! Das kann man mit 
+              <br>let num = parseInt("3");
+              <br> machen.`);
           case "":
             throw new Error("Das Ergebnis sollte im Tag mit id='ergebnis' ausgegeben werden.");
 
@@ -393,7 +375,8 @@ window.calc = function(){
     new UiTestCase(
       "Zeilen",
       "input",
-      "Es schaut doch viel schöner und ordentlicher aus, wenn die Eingabefelder und das Ergebnis in eigenen Zeilen sind.",
+      `Es schaut doch viel schöner und ordentlicher aus, wenn du es in verschiedene Zeilen gliederst. 
+        Pro Zeile ein Eingabefeld und seine Beschriftung, damit man weiß was zusammengehört.`,
       (inputs) => {
 
         let check = [{
@@ -532,112 +515,8 @@ window.calc = function(){
     }
   }
 
-  /**
-   * es wird kein Input eingelesen
-   */
-  readline = () => {
-    throw new Error("In diesem Spiel wird kein Input vorgegeben!");
-  }
-
-  /**
-   * Initializes the game with everything needed. Use updateGame for actually rendering the current state.
-   * @param {HTMLElement} elPlayingfield the game HTML element for rendering the game output
-   */
-  initGameArea = (elPlayingfield) => {
-    elPlayingfield.innerHTML = `
-    <div id='uiTarget' class='taschenrechner'>Hier kommt der Taschenrechner</div>
-    <div id='jarvis'></div>`;
-    this.elRoot = document.getElementById("uiTarget");
-
-  }
-
-
-
-  /**
-   * Updates the game area with the current state of things
-   * @param {boolean} isNewTestcase true: this is a new testcase, some UI resetting might be necessary. #prepareTestcase has been called beforehand.
-   */
-  updateGameArea = (isNewTestcase) => {
-    if (isNewTestcase) {
-      // remove the jarvis response
-      document.getElementById("jarvis").innerHTML = "";
-      this.elRoot.innerHTML = "";
-    }
-  }
-
-  /**
-   * Function that gets called as soon as a console.log (= written user input) gets called. do NOT put it to display!
-   * @param {array} args the arguments that the user passed
-   */
-  consolelog = function (/*args*/) {
-    // we have no console.log outputs...
-  }
-
-  /**
-   * called by the eval code after the user's code has terminated - no more user input to expect
-   * 
-   * We need to check the testcase validity here!
-   */
-  end = function () {
-    let tc = CODE.C.testcase,
-      elJarvis = document.getElementById("jarvis"),
-      elTarget;
-
-    try {
-      // Check: does target element exist?
-      if (tc.targetElementQuerySelector) {
-        elTarget = this.elRoot.querySelectorAll(tc.targetElementQuerySelector);
-        if (!elTarget.length) {
-          throw new Error(`Kein Element mit CSS-Selektor "${tc.targetElementQuerySelector}" vorhanden. 
-          <br>CSS Selektoren:
-          <ul>
-            <li><b>"#abc"</b>: sucht Element mit id="abc"
-            <li><b>".abc"</b>: sucht Element das das Attribut class="abc" hat
-            <li><b>"abc"</b>: sucht Element &lt;abc&gt;
-          </ul>`);
-        }
-      }
-
-      // call the sourcecode validation function
-
-      // in case of a single match, return only that.
-      if (elTarget && elTarget.length === 1)
-        elTarget = elTarget[0];
-
-      // if we have a validation function, do it now.
-      if (tc.validationFunction)
-        tc.validationFunction(elTarget);
-    } catch (e) {
-      // error case: let jarvis inform
-      elJarvis.innerHTML = tc.jarvisFailure;
-      throw e;
-    }
-
-    // success!
-    elJarvis.innerHTML = tc.jarvisSuccess? tc.jarvisSuccess: "Ah, das ist aber schön.";
-    CODE.success("Testcase " + tc.name + " erfolgreich bestanden!");
-  }
-
+  
 } // END class TaschenrechnerJarvis
 
-class UiTestCase {
 
-  targetElementQuerySelector = "";
-
-  /**
-   * 
-   * @param {string} name name of testcase
-   * @param {string} targetElementQuerySelector CSS selector for the target element(s)
-   * @param {string} jarvisFailure text Jarvis speaks in case the testcase fails
-   * @param {(elTarget:HTMLElement|NodeList) => void} validationFunction Input: either a single HTML element if the targetElementQuerySelector
-   * returns only 1, or the entire nodelist
-   */
-  constructor(name, targetElementQuerySelector, jarvisFailure = "", validationFunction = () => { }, jarvisSuccess = "") {
-    this.name = name;
-    this.targetElementQuerySelector = targetElementQuerySelector;
-    this.jarvisFailure = jarvisFailure;
-    this.validationFunction = validationFunction;
-    this.jarvisSuccess = jarvisSuccess
-  }
-}
 CODE.GAMES.add(new TaschenrechnerJarvis());

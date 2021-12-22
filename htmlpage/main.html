@@ -7,13 +7,19 @@
   <title>Coding Games!</title>
   <script src="./js/utils.js"></script>
   <script src="./js/code.js"></script>
+  <!-- Code Mirror and all its language modes -->
   <script src="./js/lib/codemirror.js"></script>
   <script src="./js/lib/mode/javascript.js"></script>
+  <script src="./js/lib/mode/xml.js"></script>
+  <script src="./js/lib/mode/htmlmixed.js"></script><!-- htmlmixed depends on js, xml, css-->
   <link rel="stylesheet" href="./js/lib/codemirror.css">
+
+  <!-- our CSS -->
   <link rel="stylesheet" href="./js/main.css">
   <link rel="stylesheet" id="gameCSS">
   <!-- Games - we cannot use import because that causes CORS problems when main.html is in file:/// path-->
   <script src="./js/classes/game.js"></script>
+  <script src="./js/classes/htmlGame.js"></script>
   <script src="./js/games/thor/thor.js"></script>
   <!--<script src="./js/games/thorII/thorII.js"></script>-->
   <script src="./js/games/init/init.js"></script>
@@ -21,7 +27,7 @@
   <script src="./js/games/asteroids/asteroids.js"></script>
   <script src="./js/games/gameOfLife/gameOfLife.js"></script>
   <script src="./js/games/gameOfLife/gameOfLifeII.js"></script>
-  <script src="./js/games/simpleui/uiFirstSteps.js"></script>
+  <script src="./js/games/simpleui/taschenrechnerJarvis.js"></script>
 
 </head>
 

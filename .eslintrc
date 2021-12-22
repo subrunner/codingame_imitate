@@ -11,6 +11,8 @@
     "Game": true,
     "GameOfLife": true,
     "GameOfLifeTestcase": true,
+    "HTMLGame": true,
+    "UiTestCase": true,
     "Promise": true,
     "window": true,
     "console": true

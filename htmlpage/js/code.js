@@ -204,13 +204,35 @@
 
 
 		// do our evaluation!
-		await eval("(async () => { " + code + "\nCODE.G.end()})()");
+    if (CODE.GAME.type === "html"){
+      // user programs HTML code
+      let elRoot = document.getElementById("uiTarget");
+      elRoot.innerHTML = code;
+
+      // parse out the script tags and append it to the 
+      // root element as actual script tags...
+      let scripts = elRoot.querySelectorAll("script");
+      for (let i = 0; i < scripts.length; i++){
+        let script = scripts[i],
+          scriptText = script.innerHTML;
+        script.remove();
+        script = document.createElement("script");
+        // capsulate in function to prevent 'let' redeclarations on
+        // trying multiple testcases
+        script.innerHTML = "(function(){" + scriptText + "})()";
+        elRoot.append(script);
+      }
+      CODE.G.end();
+    } else {
+      // user programs JS code
+      await eval("(async () => { " + code + "\nCODE.G.end()})()");
+    }
 
 		if (!CODE.C.isBlindTests) {
 			// stop loading
 			elTestcase.classList.remove("loading");
 		}
-	}
+	} // END executeCode
 
 	/**
    * executes all testcases in CODE.C.testcases. Make sure that the proper successfulTestcases
@@ -467,6 +489,11 @@
 			myCodeMirror.on('blur', saveCode);
 		}
 		myCodeMirror.setValue(codeTemplate);
+
+    // game type: html or javascript
+    let isHtml = CODE.G.type === "html";
+    myCodeMirror.setOption("mode", isHtml ? "htmlmixed" : "javascript");
+    myCodeMirror.setOption("htmlMode", isHtml);
 
 		// 'console'
 		document.getElementById("result").innerHTML = "";
