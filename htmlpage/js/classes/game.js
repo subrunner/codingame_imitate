@@ -14,6 +14,8 @@ console.log('first');`;
   output = "Was der Programierer als Output produzieren soll<p>Der String, der als Input geliefert wurde - <span class='console'>console.log(input)</span>";
   skills = ["Read Input", "Write Output"];
 
+  // how long the program should wait before providing the next
+  // await readline() input for the user
   readlineSleep = 200;
 
   /**
@@ -91,7 +93,8 @@ console.log('first');`;
    * @param {array} args the arguments that the user passed
    */
   consolelog = function (args) {
-    this.outputs.push(args[0]);
+    if (this.outputs)
+      this.outputs.push(args[0]);
     if (args[0] !== CODE.C.testcase.output)
       throw new Error("Expected output: '" + CODE.C.testcase.output + "', found '" + args[0] + "'.");
     CODE.success("Erfolgreich den Input '" + args[0] + "' an den Output weitergegeben!");
