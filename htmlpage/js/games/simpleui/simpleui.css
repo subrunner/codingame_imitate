@@ -1,17 +1,5 @@
 .taschenrechner {
   max-width: 400px; }
-  .taschenrechner .label {
-    width: 200px;
-    text-align: right;
-    font-weight: bold;
-    display: inline-block;
-    padding-right: 10px; }
-    .taschenrechner .label::after {
-      content: ":"; }
-  .taschenrechner .row {
-    padding: 10px; }
-  .taschenrechner .label + * {
-    display: inline-block; }
   .taschenrechner button {
     float: right; }
     .taschenrechner button + .row {

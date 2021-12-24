@@ -1,27 +1,6 @@
 .taschenrechner {
   max-width: 400px;
 
-  .label {
-    width: 200px;
-    text-align: right;
-    font-weight: bold;
-    display: inline-block;
-    padding-right: 10px;
-
-    &::after {
-      content: ":";
-    }
-  }
-
-  .row {
-    padding: 10px;
-  }
-
-  // alles was an ein Label anschließt, soll sofort gezeigt werden
-  .label + * {
-    display: inline-block;
-  }
-
   button {
     float: right;
 

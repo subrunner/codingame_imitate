@@ -1,46 +1,56 @@
-@charset "UTF-8";
 body {
   font-family: Arial, Helvetica, sans-serif;
   position: relative;
   /* same as menu height + padding */
   padding-top: 42px;
-  margin: 0; }
+  margin: 0;
+}
 
 h1 {
-  text-align: center; }
+  text-align: center;
+}
 
 .grid {
   display: grid;
   grid-template-areas: "header header" "rules rules" "src result";
   grid-auto-columns: 50%;
-  grid-gap: 20px 0; }
+  grid-gap: 20px 0;
+}
 
 .panel {
   border-radius: 1rem;
   border: 1px solid #333;
   margin: 0 10px;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 .panel-header {
   background-color: lightgray;
-  padding: 10px 20px; }
+  padding: 10px 20px;
+}
 
 .panel-body {
-  padding: 20px; }
+  padding: 20px;
+}
 
 .btn.loading {
   /* loading button: stop the button from reacting, show some CSS animation... */
   pointer-events: none;
   color: #ddd;
   border-color: #ddd;
-  position: relative; }
+  position: relative;
+}
 
 /* CSS animation */
+
 @keyframes loadinganimation {
   from {
-    transform: rotate(0deg); }
+    transform: rotate(0deg);
+  }
   to {
-    transform: rotate(360deg); } }
+    transform: rotate(360deg);
+  }
+}
 
 .btn.loading::after {
   /* the animated content... */
@@ -55,24 +65,29 @@ h1 {
   animation-timing-function: linear;
   font-family: Courier;
   font-size: 24px;
-  top: 5px; }
+  top: 5px;
+}
 
 #code {
   /* height: view - menu - padding */
-  height: calc(100vh - 42px - 40px); }
+  height: calc(100vh - 42px - 40px);
+}
 
 #codearea {
   border: 1px solid black;
   background: #eaeaea;
   font-size: 13px;
   /* height of sourcecode area - height of testcases - some padding */
-  height: calc(100% - 100px); }
+  height: calc(100% - 100px);
+}
 
 .CodeMirror {
-  height: 100%; }
+  height: 100%;
+}
 
 .view {
-  padding: 8px; }
+  padding: 8px;
+}
 
 .actions {
   vertical-align: top;
@@ -83,30 +98,36 @@ h1 {
   /* subtract the padding of both areas, plus an extra 5px...... */
   height: 100px;
   /* same height as testcases */
-  overflow: auto; }
+  overflow: auto;
+}
 
 .playall,
 .release {
-  display: inline-block; }
+  display: inline-block;
+}
 
 #testcases {
   margin-top: 10px;
   height: 100px;
   width: 50%;
   overflow: auto;
-  display: inline-block; }
+  display: inline-block;
+}
 
 #testcases .testcase::before,
 .playall::before,
 .release::before {
   content: "▶";
-  padding-right: 5px; }
+  padding-right: 5px;
+}
 
 #testcases .success {
-  background: lightgreen; }
+  background: lightgreen;
+}
 
 #testcases .error {
-  background: lightpink; }
+  background: lightpink;
+}
 
 #testcases .warn::after {
   content: "!";
@@ -114,86 +135,111 @@ h1 {
   background: yellow;
   margin: 10px;
   border-radius: 1em;
-  color: black; }
+  color: black;
+}
 
 #instructions {
-  font-size: 14px; }
+  font-size: 14px;
+}
 
 span.out {
   background: darkblue;
-  color: white; }
+  color: white;
+}
 
 span.var {
-  background: orange; }
+  background: orange;
+}
 
 span.num {
-  color: blue; }
+  color: blue;
+}
 
 span {
   font-family: "Courier New", Courier, monospace;
   border-radius: 3px;
-  padding: 1px 3px; }
+  padding: 1px 3px;
+}
 
 span.console {
   background: #333;
   color: white;
   display: block;
   padding: 5px;
-  margin: 10px; }
+  margin: 10px;
+}
 
 #instructions .inputs {
   width: 48%;
-  float: left; }
+  float: left;
+}
 
 #instructions .outputs {
   width: 48%;
-  float: right; }
+  float: right;
+}
 
 .btn {
   padding: 10px;
   border-radius: 1em;
   border: 1px solid #333;
   cursor: pointer;
-  margin: 10px; }
+  margin: 10px;
+}
 
 .btn:hover {
-  background: lightblue; }
+  background: lightblue;
+}
 
+// result-panel body content
 .resultbody {
+  //* height: view - menu - padding */
   height: calc(100vh - 42px - 40px);
   display: flex;
   flex-flow: column;
-  overflow-y: auto; }
+  overflow-y: auto;
+}
 
+// console in result-panel
 #result {
   background: #333;
   padding: 10px;
   font-family: Courier New;
-  min-height: 280px; }
+  min-height: 280px;
+  //* minus the 2x10px padding!*/
+  //overflow: auto;
+}
 
 .quote {
   padding: 10px 20px;
   border-radius: 1rem;
   background: #eee;
-  margin: 10px; }
+  margin: 10px;
+}
 
 .success {
-  color: green !important; }
+  color: green !important;
+}
 
 .error {
-  color: red !important; }
+  color: red !important;
+}
 
 .debug {
-  color: orange !important; }
+  color: orange !important;
+}
 
 .stack {
-  padding-left: 20px; }
+  padding-left: 20px;
+}
 
 .log::before {
-  content: "> "; }
+  content: "> ";
+}
 
 .log {
-  color: #eaeaea; }
+  color: #eaeaea;
+}
 
 .menu {
   position: fixed;
@@ -205,26 +251,32 @@ span.console {
   right: 0;
   top: 0;
   height: 20px;
-  z-index: 10; }
+  z-index: 10;
+}
 
 .menu a {
-  color: white; }
+  color: white;
+}
 
 .menu a.btn:hover {
-  background: #666; }
+  background: #666;
+}
 
 #game {
-  position: relative; }
+  position: relative;
+}
 
 #gameChoice {
   background: #eaeaea;
   padding: 20px;
   /* height of view - height of menu - padding */
-  min-height: calc(100vh - 42px - 40px); }
+  min-height: calc(100vh - 42px - 40px);
+}
 
 #gameChoice .games {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; }
+  grid-template-columns: 1fr 1fr 1fr;
+}
 
 .game {
   padding: 20px;
@@ -232,7 +284,8 @@ span.console {
   box-shadow: 1px 1px 5px black;
   margin: 10px;
   position: relative;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .game .solved {
   font-size: 2em;
@@ -240,7 +293,8 @@ span.console {
   font-weight: bold;
   right: 0;
   transform: rotate(45deg);
-  color: green; }
+  color: green;
+}
 
 .game .title {
   display: block;
@@ -248,27 +302,33 @@ span.console {
   color: black;
   padding-bottom: 10px;
   font-size: 1.1rem;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 .game:hover .title,
 .game .title:hover {
-  text-decoration: underline; }
+  text-decoration: underline;
+}
 
 .game:hover {
-  background-color: #ffffee; }
+  background-color: #ffffee;
+}
 
 .game .synopsis {
   font-size: 0.9rem;
   padding: 10px;
   background: #eaeaea;
-  margin: 10px; }
+  margin: 10px;
+}
 
 img {
-  vertical-align: middle; }
+  vertical-align: middle;
+}
 
 /*
 * Popup
 */
+
 .popup {
   background: rgba(0, 0, 0, 0.4);
   position: fixed;
@@ -277,56 +337,77 @@ img {
   left: 0;
   right: 0;
   /* must be above menu */
-  z-index: 20; }
-  .popup .panel {
+  z-index: 20;
+
+  .panel {
     min-width: 300px;
     max-width: 800px;
     width: 30%;
     margin: 100px auto auto auto;
-    background: white; }
-  .popup .title {
+    background: white;
+  }
+
+  .title {
     display: inline-block;
-    padding: 10px 0 10px 0; }
-  .popup .close {
+    padding: 10px 0 10px 0;
+  }
+
+  .close {
     float: right;
-    margin: 0; }
+    margin: 0;
+  }
+}
 
 .draggable {
-  margin: 0 !important; }
+  margin: 0 !important;
+}
 
 .importExport {
   width: 48%;
   display: inline-block;
-  vertical-align: top; }
+  vertical-align: top;
+}
 
 .row {
-  padding: 10px; }
+  padding: 10px;
+}
 
 .label {
   width: 200px;
   text-align: right;
   font-weight: bold;
   display: inline-block;
-  padding-right: 10px; }
-  .label::after {
-    content: ":"; }
-  .label + * {
-    display: inline-block; }
+  padding-right: 10px;
+
+  &::after {
+    content: ":";
+  }
+
+  // alles was an ein Label anschließt, soll sofort gezeigt werden
+  + * {
+    display: inline-block;
+  }
+}
 
 .btnPanel {
-  text-align: center; }
-  .btnPanel .next,
-  .btnPanel .prev {
+  text-align: center;
+  .next,
+  .prev {
     display: inline-block;
-    background: white; }
-  .btnPanel .next:after {
+    background: white;
+  }
+
+  .next:after {
     content: ">";
-    padding-left: 5px; }
-  .btnPanel .prev:before {
+    padding-left: 5px;
+  }
+
+  .prev:before {
     content: "<";
-    padding-right: 5px; }
+    padding-right: 5px;
+  }
+}
 
 .submit.btn {
-  float: right; }
-
-/*# sourceMappingURL=main.css.map */
+  float: right;
+}

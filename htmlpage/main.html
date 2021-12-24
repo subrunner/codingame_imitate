@@ -36,6 +36,7 @@
   <div class="menu">
     <a class="btn" href="#games">Choose Game</a>
     <a class="btn" href="#help">Help</a>
+    <a class="btn" href="#importExport">Import / Export</a>
   </div>
   <div class="view" id="gameChoice" style="display:none"></div>
   <div class="view grid" id="gameDisplay" style="display: none;">
@@ -92,10 +93,36 @@
 
     <p></p>
   </div>
+  <div class="view" id="importExport" style="display: none">
+    <div class="panel importExport">
+      <div class="panel-header">Load Game</div>
+      <div class="panel-body">
+
+        <form enctype="multipart/form-data" class="row">
+          <div class="label">Save file</div>
+          <input id="upload" type=file accept="application/json" name="files[]" size=30 onchange="handleImportFile(event)">
+        </form>
+        <div class="row">
+          <div class="label">File Content</div>
+          <textarea id="importContent" cols="40" rows="5"></textarea>
+        </div>
+        <button id="importButton" class="btn submit" onclick="doImport()">Load</button>
+      </div>
+    </div>
+    <div class="panel importExport">
+      <div class="panel-header">Save Game</div>
+      <div class="panel-body">
+        <button id="exportButton" class="btn" onclick="doExport()">Export Save-file</button>
+      </div>
+    </div>
+  </div>
 
   <div class="popup" id="popup" style="display:none">
     <div class="panel">
-      <div class="panel-header"><div class="title"></div><div class="close btn">X</div></div>
+      <div class="panel-header">
+        <div class="title"></div>
+        <div class="close btn">X</div>
+      </div>
       <div class="panel-body">
       </div>
     </div>
